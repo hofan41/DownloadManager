@@ -1,0 +1,17 @@
+{
+  "name": "DownloadManager",
+  "version": "1.0.0",
+  "description": "Webapp that enables management of files to download.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "hofan.kang",
+  "license": "ISC",
+  "dependencies": {
+    "handlebars": "^3.0.0",
+    "hapi": "^8.2.0",
+    "joi": "^5.1.0",
+    "mongodb": "^1.4.32"
+  }
+}
