@@ -9,6 +9,7 @@
   "author": "hofan.kang",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1.14",
     "handlebars": "^3.0.0",
     "hapi": "^8.2.0",
     "joi": "^5.1.0",

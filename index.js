@@ -1,20 +1,14 @@
 var Path = require('path');
 var Hapi = require('hapi');
-var Db = require('mongodb').Db;
-var MongoClient = require('mongodb').MongoClient, format = require('util').format;
-
-MongoClient.connect(process.env.DOWNLOAD_MANAGER_MONGODB_URI, function(err, db) {
-  if(err) {
-    throw err;
-  } else {
-    console.log('Download manager connected to mongodb successfully!');
-  }
-});
+var aws = require('aws-sdk');
 
 var server = new Hapi.Server();
 
+console.log("Hello world!");
+console.log(process.env.AWS_ACCESS_KEY_ID);
+
 server.connection({
-  port: Number(process.env.PORT || 8080)
+  port: 8080
 });
 
 server.route({
@@ -30,8 +24,26 @@ server.route({
 server.route({
   path: '/',
   method: 'GET',
-  handler: {
-    view: 'projectList'
+  handler: function(request, reply) {
+    aws.config.update({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    });
+
+    var s3 = new aws.S3();
+
+    var s3_params = {
+      Bucket: process.env.S3_BUCKET
+    };
+
+    s3.listObjects(s3_params, function(err, data) {
+      var returnData = JSON.stringify(data);
+      console.log(returnData);
+      reply(returnData);
+
+    });
+
+    
   }
 });
 
