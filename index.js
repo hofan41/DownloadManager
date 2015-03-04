@@ -22,6 +22,7 @@ internals.putObjectCallback = function(err, data, reply, s3Params) {
       error: err.message
     });
   } else {
+    reply.continue();
     s3.waitFor('objectExists', s3Params, function(err, data) {
       if (data) {
         io.emit('putObject');
