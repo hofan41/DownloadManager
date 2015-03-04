@@ -4,7 +4,7 @@ var AWS = require('aws-sdk');
 
 var server = new Hapi.Server();
 var s3 = new AWS.S3();
-var s3_params = {
+var s3Params = {
   Bucket: process.env.AWS_S3_BUCKET
 };
 
@@ -51,7 +51,7 @@ server.route({
   path: '/api/downloads',
   method: 'GET',
   handler: function(request, reply) {
-    s3.listObjects(s3_params, function(err, data) {
+    s3.listObjects(s3Params, function(err, data) {
       reply({
         data: data.Contents,
         error: err

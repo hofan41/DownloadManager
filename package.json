@@ -4,7 +4,7 @@
   "description": "Webapp that enables management of files to download.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "grunt"
   },
   "author": "hofan.kang",
   "license": "ISC",
@@ -14,5 +14,9 @@
     "hapi": "^8.2.0",
     "joi": "^5.1.0",
     "mongodb": "^1.4.32"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.0"
   }
 }
