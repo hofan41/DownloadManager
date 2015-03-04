@@ -1,14 +1,19 @@
 var Path = require('path');
 var Hapi = require('hapi');
-var aws = require('aws-sdk');
+var AWS = require('aws-sdk');
 
 var server = new Hapi.Server();
+var s3 = new AWS.S3();
+var s3_params = {
+  Bucket: process.env.AWS_S3_BUCKET
+};
 
-console.log("Hello world!");
-console.log(process.env.AWS_ACCESS_KEY_ID);
+var defaultContext = {
+  title: process.env.SITE_TITLE
+};
 
 server.connection({
-  port: 8080
+  port: Number(process.env.PORT || 8080)
 });
 
 server.route({
@@ -22,28 +27,36 @@ server.route({
 });
 
 server.route({
+  path: '/js/{javascript}',
+  method: 'GET',
+  handler: {
+    directory: {
+      path: Path.join(__dirname, 'js')
+    }
+  }
+});
+
+
+server.route({
   path: '/',
   method: 'GET',
+  handler: {
+    view: {
+      template: 'index'
+    }
+  }
+});
+
+server.route({
+  path: '/api/downloads',
+  method: 'GET',
   handler: function(request, reply) {
-    aws.config.update({
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-    });
-
-    var s3 = new aws.S3();
-
-    var s3_params = {
-      Bucket: process.env.S3_BUCKET
-    };
-
     s3.listObjects(s3_params, function(err, data) {
-      var returnData = JSON.stringify(data);
-      console.log(returnData);
-      reply(returnData);
-
+      reply({
+        data: data.Contents,
+        error: err
+      });
     });
-
-    
   }
 });
 
@@ -52,7 +65,10 @@ server.views({
     html: require('handlebars')
   },
   path: 'views',
-  relativeTo: __dirname
+  relativeTo: __dirname,
+  helpersPath: 'helpers',
+  context: defaultContext
 });
+
 
 server.start();
