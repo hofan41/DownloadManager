@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$.fn.dataTable.moment('LLL');
-	$('#downloadList').DataTable({
+	var dataTable = $('#downloadList').DataTable({
 		processing: true,
 		serverSide: false,
 		ajax: '/api/downloads',
@@ -12,5 +12,10 @@ $(document).ready(function() {
 				return moment(data).format('LLL');
 			}
 		}]
+	});
+
+	var socket = io();
+	socket.on('putObject', function(msg) {
+		dataTable.ajax.reload();
 	});
 });

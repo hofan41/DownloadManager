@@ -23,10 +23,11 @@ module.exports = function(grunt) {
 					module: false,
 					process: false,
 					require: false,
-					__dirname: false
+					__dirname: false,
+					exports: false
 				}
 			},
-			files: ['Gruntfile.js', 'index.js']
+			files: ['Gruntfile.js', 'index.js', 'lib/**/*.js', 'test/**/*.js']
 		}
 	});
 
