@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 					exports: false
 				}
 			},
-			files: ['Gruntfile.js', 'index.js', 'lib/**/*.js', 'test/**/*.js']
+			files: ['*.js', 'handlers/**/*.js', 'test/**/*.js']
 		}
 	});
 

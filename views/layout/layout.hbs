@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en-US">
   <head>
     <title>{{title}}</title>
@@ -38,23 +39,7 @@
       </div>
       <!-- /.container-fluid -->
     </nav>
-    <div class="container">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Downloads</h3>
-        </div>
-        <div class="panel-body">
-          <table id="downloadList" class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Last Modified</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-      </div>
-    </div>
+    {{{content}}}
     <!-- Socket IO -->
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <!-- Jquery -->
@@ -67,8 +52,9 @@
     <!-- Datatables Moment Plugin for Date Sorting -->
     <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/plug-ins/f2c75b7247b/sorting/datetime-moment.js"></script>
-    <script type="text/javascript" charset="utf8" src="/js/downloadList.js"></script>
-
-    </script>
+    <!-- Page Specific Javascript Files -->
+    {{#each jsFiles}}
+      <script type="text/javascript" charset="utf8" src="{{this}}"></script>
+    {{/each}}
   </body>
 </html>
