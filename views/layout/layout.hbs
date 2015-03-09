@@ -27,7 +27,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">New Download</a></li>
+            <li><a href="#" data-toggle="modal" data-target="#addNewDownload">New Download</a></li>
           </ul>
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
@@ -41,6 +41,38 @@
       <!-- /.container-fluid -->
     </nav>
     {{{content}}}
+    <!-- Modal For New Download -->
+    <div class="modal fade" id="addNewDownload" tabindex="-1" role="dialog" aria-labelledby="addNewDownloadLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="addNewDownloadLabel">New Download</h4>
+          </div>
+          <div class="modal-body">
+            <div class="alert alert-danger" role="alert">
+              <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+              <span class="sr-only">Error:</span>
+              Enter a valid email address
+            </div>
+            <form>
+              <div class="form-group">
+                <label for="downloadName" class="control-label">Download Name:</label>
+                <input type="text" class="form-control" name="downloadName" id="downloadName">
+              </div>
+              <div class="form-group">
+                <label for="descriptionText" class="control-label">Description:</label>
+                <textarea class="form-control" name="descriptionText" id="descriptionText"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="addNewDownloadSave">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- Socket IO -->
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <!-- Jquery -->
@@ -53,6 +85,8 @@
     <!-- Datatables Moment Plugin for Date Sorting -->
     <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/plug-ins/f2c75b7247b/sorting/datetime-moment.js"></script>
+    <!-- Layout Specific Javascript Files -->
+    <script type="text/javascript" charset="utf-8" src="/js/addNewDownload.js"></script>
     <!-- Page Specific Javascript Files -->
     {{#each jsFiles}}
     <script type="text/javascript" charset="utf-8" src="{{this}}"></script>

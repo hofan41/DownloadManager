@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
 	$.fn.dataTable.moment('LLL');
 	var dataTable = $('#downloadList').DataTable({
 		processing: true,

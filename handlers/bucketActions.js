@@ -10,16 +10,15 @@ internals.defaultS3Params = {
 
 internals.putObjectCallback = function(err, data, reply, s3Params, that) {
   if (err) {
-    console.log('Error during putObjectCallback.');
-    console.log(JSON.stringify(err));
-    reply({
-      error: err.message
-    });
+    reply(err);
   } else {
     reply.continue();
     s3.waitFor('objectExists', s3Params, function(err, data) {
       if (data) {
         that.io.emit('putObject');
+      } else {
+        // Not tested, need to test to figure out what happens.
+        throw err;
       }
     });
   }
@@ -39,7 +38,7 @@ exports.validateSettings = internals.validateSettings = function(callback) {
 
 exports.createFolder = internals.createFolder = function(request, reply) {
   var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: request.query.projectName + '/'
+    Key: request.payload.downloadName + '/'
   });
 
   // TODO : Figure out some way to do the putObjectCallback better instead of passing
@@ -57,23 +56,27 @@ exports.createFolder = internals.createFolder = function(request, reply) {
           internals.putObjectCallback(err, data, reply, s3Params, that);
         });
       } else {
-        // If it's some other type of error during getObject.
-        reply(JSON.stringify(err));
+        // If it's some other type of error during getObject, throw programmer error.
+        reply(err);
       }
     } else {
-      // If there was no error in getObject, then the object already exists.
+      // If there was no error in getObject, then the object already exists. Throw user error.
       reply({
-        error: 'Download name already exists in the system!'
-      });
+        message: 'Download name already exists in the system!'
+      }).code(400);
     }
   });
 };
 
 exports.listBucket = internals.listBucket = function(request, reply) {
   s3.listObjects(internals.defaultS3Params, function(err, data) {
-    reply({
-      data: err ? null : data.Contents,
-      error: err ? err.message : null
-    });
+    if (err) {
+      // Throw programmer error
+      reply(err);
+    } else {
+      reply({
+        data: data.Contents
+      });
+    }
   });
 };
