@@ -44,5 +44,6 @@ internals.startServer = function() {
 BucketActions.validateSettings().then(function() {
   internals.startServer();
 }).catch(function(err) {
+  console.error(err);
   process.exit(1);
 });
