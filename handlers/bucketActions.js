@@ -64,7 +64,7 @@ exports.headObject = internals.headObject = function(downloadName) {
 
 exports.getObject = internals.getObject = function(downloadName) {
   var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: downloadName + '/'
+    Key: downloadName
   });
 
   return internals.s3.getObject(s3Params).promise();
