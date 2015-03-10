@@ -23,4 +23,4 @@ exports.createNewDownload = function(request, reply) {
       message: err.message
     }).code(400);
   });
-}
+};
