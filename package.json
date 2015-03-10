@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1.16",
+    "aws-sdk-promise": "0.0.2",
     "handlebars": "^3.0.0",
     "hapi": "^8.2.0",
     "hoek": "^2.11.1",

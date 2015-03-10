@@ -1,82 +1,76 @@
-var AWS = require('aws-sdk');
+var Promise = require('promise');
+var AWS = require('aws-sdk-promise');
 var Hoek = require('hoek');
 var s3 = new AWS.S3();
 
 var internals = {};
 
+internals.s3 = new AWS.S3();
+
 internals.defaultS3Params = {
   Bucket: process.env.AWS_S3_BUCKET
 };
 
-internals.putObjectCallback = function(err, data, reply, s3Params, that) {
-  if (err) {
-    reply(err);
-  } else {
-    reply.continue();
-    s3.waitFor('objectExists', s3Params, function(err, data) {
-      if (data) {
-        that.io.emit('putObject');
-      } else {
-        // Not tested, need to test to figure out what happens.
-        throw err;
-      }
-    });
-  }
+internals.downloadNameAlreadyExistsError = function() {
+  throw new Error('Download already exists in the system!');
+};
+
+internals.defaultError = function(err) {
+  console.log(err);
+  throw err;
 };
 
 exports.validateSettings = internals.validateSettings = function(callback) {
-  s3.headBucket(internals.defaultS3Params, function(err, data) {
-    if (err) {
-      console.log('Download manager could not access aws bucket: ' + internals.defaultS3Params.Bucket);
-      console.log(JSON.stringify(err));
-    } else {
-      console.log('Download manager successfully connected to aws bucket: ' + internals.defaultS3Params.Bucket);
-    }
-    return callback(err, data);
+  return internals.s3.headBucket(internals.defaultS3Params).promise().then(function() {
+    console.log('Download manager successfully connected to aws bucket: ' + internals.defaultS3Params.Bucket);
+  }, function(err) {
+    console.log('Download manager could not access aws bucket: ' + internals.defaultS3Params.Bucket);
+    console.log(JSON.stringify(err));
+    throw err;
   });
 };
 
-exports.createFolder = internals.createFolder = function(request, reply) {
+exports.createFolder = internals.createFolder = function(downloadName, descriptionText) {
   var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: request.payload.downloadName + '/'
+    Key: downloadName + '/'
   });
 
-  // TODO : Figure out some way to do the putObjectCallback better instead of passing
-  // this around.
-  var that = this;
-
-  // Test if the object already exists
-  s3.headObject(s3Params, function(err, data) {
-    // We are looking for an error.
-    if (err) {
+  return internals.headObject(downloadName + '/').then(internals.downloadNameAlreadyExistsError,
+    function(err) {
       // If the error is that the object does not exist
       if (err.code === 'NotFound') {
         // Add the object
-        s3.putObject(s3Params, function(err, data) {
-          internals.putObjectCallback(err, data, reply, s3Params, that);
+        return internals.s3.putObject(Hoek.applyToDefaults(s3Params, {
+          Metadata: {
+            Description: descriptionText
+          }
+        })).promise().then(function(data) {
+          // Wait for the object to be added
+          return internals.s3.waitFor('objectExists', s3Params).promise();
         });
       } else {
-        // If it's some other type of error during getObject, throw programmer error.
-        reply(err);
+        // If the error is some other problem, throw it.
+        internals.defaultError(err);
       }
-    } else {
-      // If there was no error in getObject, then the object already exists. Throw user error.
-      reply({
-        message: 'Download name already exists in the system!'
-      }).code(400);
-    }
-  });
+    });
 };
 
-exports.listBucket = internals.listBucket = function(request, reply) {
-  s3.listObjects(internals.defaultS3Params, function(err, data) {
-    if (err) {
-      // Throw programmer error
-      reply(err);
-    } else {
-      reply({
-        data: data.Contents
-      });
-    }
+exports.headObject = internals.headObject = function(downloadName) {
+  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+    Key: downloadName
   });
+
+  return internals.s3.headObject(s3Params).promise();
+};
+
+exports.getObject = internals.getObject = function(downloadName) {
+  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+    Key: downloadName + '/'
+  });
+
+  return internals.s3.getObject(s3Params).promise();
+};
+
+exports.listBucket = internals.listBucket = function() {
+  return internals.s3.listObjects(internals.defaultS3Params).promise();
 };

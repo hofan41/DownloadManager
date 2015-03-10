@@ -10,7 +10,8 @@ server.connection({
 var io = require('socket.io')(server.listener);
 
 server.bind({
-  io: io
+  io: io,
+  s3: BucketActions
 });
 
 // Declare internals
@@ -35,15 +36,13 @@ internals.startServer = function() {
 
   server.route(require('./routes'));
 
-  server.start(function(){
+  server.start(function() {
     console.log('Server listening at:', server.info.uri);
   });
 };
 
-BucketActions.validateSettings(function(err, data) {
-  if (err) {
-    throw new Error();
-  } else {
-    internals.startServer();
-  }
+BucketActions.validateSettings().then(function() {
+  internals.startServer();
+}).catch(function(err) {
+  process.exit(1);
 });

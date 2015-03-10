@@ -2,6 +2,7 @@ var Joi = require('joi');
 var Assets = require('./handlers/assets');
 var BucketActions = require('./handlers/bucketActions');
 var Pages = require('./handlers/pages');
+var Api = require('./handlers/api');
 
 // Server Endpoints
 module.exports = [{
@@ -9,9 +10,13 @@ module.exports = [{
   method: 'GET',
   handler: Pages.home
 }, {
+  path: '/download/{downloadName}',
+  method: 'GET',
+  handler: Pages.download
+}, {
   path: '/api/downloads/put',
   method: 'PUT',
-  handler: BucketActions.createFolder,
+  handler: Api.createNewDownload,
   config: {
     validate: {
       payload: {
@@ -21,9 +26,13 @@ module.exports = [{
     }
   }
 }, {
+  path: '/api/download/{downloadName}',
+  method: 'GET',
+  handler: BucketActions.getObject
+}, {
   path: '/api/downloads',
   method: 'GET',
-  handler: BucketActions.listBucket
+  handler: Api.downloadsList
 }, {
   path: '/{param*}',
   method: 'GET',
