@@ -1,7 +1,6 @@
 var Promise = require('promise');
 var AWS = require('aws-sdk-promise');
 var Hoek = require('hoek');
-var s3 = new AWS.S3();
 
 var internals = {};
 
