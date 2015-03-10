@@ -1,6 +1,5 @@
 var Joi = require('joi');
 var Assets = require('./handlers/assets');
-var BucketActions = require('./handlers/bucketActions');
 var Pages = require('./handlers/pages');
 var Api = require('./handlers/api');
 
@@ -25,10 +24,6 @@ module.exports = [{
       }
     }
   }
-}, {
-  path: '/api/download/{downloadName}',
-  method: 'GET',
-  handler: BucketActions.getObject
 }, {
   path: '/api/downloads',
   method: 'GET',

@@ -13,7 +13,7 @@ exports.downloadsList = function(request, reply) {
 exports.createNewDownload = function(request, reply) {
   var that = this;
 
-  return this.s3.createFolder(request.payload.downloadName, request.payload.descriptionText).then(function() {
+  return this.s3.createDownload(request.payload.downloadName + '/', request.payload.descriptionText).then(function() {
     // Return status OK to host
     reply.continue();
     // Notify other clients via socket.io

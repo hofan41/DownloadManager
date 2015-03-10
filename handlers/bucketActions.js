@@ -30,12 +30,12 @@ exports.validateSettings = internals.validateSettings = function(callback) {
   });
 };
 
-exports.createFolder = internals.createFolder = function(downloadName, descriptionText) {
+exports.createDownload = internals.createDownload = function(downloadName, descriptionText) {
   var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: downloadName + '/'
+    Key: downloadName
   });
 
-  return internals.headObject(downloadName + '/').then(internals.downloadNameAlreadyExistsError,
+  return internals.headObject(downloadName).then(internals.downloadNameAlreadyExistsError,
     function(err) {
       // If the error is that the object does not exist
       if (err.code === 'NotFound') {
