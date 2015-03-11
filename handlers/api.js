@@ -17,7 +17,28 @@ exports.createNewDownload = function(request, reply) {
     // Return status OK to host
     reply.continue();
     // Notify other clients via socket.io
-    that.io.emit('putObject');
+    that.io.emit('refreshDownloadList');
+  }).catch(function(err) {
+    reply({
+      message: err.message
+    }).code(400);
+  });
+};
+
+exports.deleteDownload = function(request, reply) {
+  var that = this;
+
+  var downloadName = request.params.downloadName + '/';
+
+  // Issue delete object request to s3
+  return this.s3.deleteObject(downloadName).then(function() {
+    // Wait until the object has been deleted
+    this.s3.waitFor('objectNotExists', downloadName)
+  }).then(function() {
+    // Return status OK to host
+    reply.continue();
+    // Notify other clients via socket.io
+    that.io.emit('refreshDownloadList');
   }).catch(function(err) {
     reply({
       message: err.message

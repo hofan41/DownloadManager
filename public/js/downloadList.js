@@ -26,7 +26,7 @@ $(function() {
 	});
 
 	var socket = io();
-	socket.on('putObject', function(msg) {
+	socket.on('refreshDownloadList', function(msg) {
 		dataTable.ajax.reload();
 	});
 });
