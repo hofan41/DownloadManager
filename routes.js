@@ -13,6 +13,10 @@ module.exports = [{
   method: 'GET',
   handler: Pages.download
 }, {
+  path: '/api/download/delete/{downloadName}',
+  method: 'GET',
+  handler: Api.deleteDownload
+}, {
   path: '/api/downloads/put',
   method: 'PUT',
   handler: Api.createNewDownload,
