@@ -10,49 +10,49 @@ internals.joiDescriptionText = Joi.any().label('Description');
 
 // Server Endpoints
 module.exports = [{
-  path: '/',
-  method: 'GET',
-  handler: Pages.home
+    path: '/',
+    method: 'GET',
+    handler: Pages.home
 }, {
-  path: '/download/{downloadName}',
-  method: 'GET',
-  handler: Pages.download,
-  config: {
-    validate: {
-      params: {
-        downloadName: internals.joiDownloadName
-      }
+    path: '/download/{downloadName}',
+    method: 'GET',
+    handler: Pages.download,
+    config: {
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName
+            }
+        }
     }
-  }
 }, {
-  path: '/api/download/delete/{downloadName}',
-  method: 'GET',
-  handler: Api.deleteDownload,
-  config: {
-    validate: {
-      params: {
-        downloadName: internals.joiDownloadName
-      }
+    path: '/api/download/delete/{downloadName}',
+    method: 'GET',
+    handler: Api.deleteDownload,
+    config: {
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName
+            }
+        }
     }
-  }
 }, {
-  path: '/api/downloads/put',
-  method: 'PUT',
-  handler: Api.createNewDownload,
-  config: {
-    validate: {
-      payload: {
-        downloadName: internals.joiDownloadName,
-        descriptionText: internals.joiDescriptionText
-      }
+    path: '/api/downloads/put',
+    method: 'PUT',
+    handler: Api.createNewDownload,
+    config: {
+        validate: {
+            payload: {
+                downloadName: internals.joiDownloadName,
+                descriptionText: internals.joiDescriptionText
+            }
+        }
     }
-  }
 }, {
-  path: '/api/downloads',
-  method: 'GET',
-  handler: Api.downloadsList
+    path: '/api/downloads',
+    method: 'GET',
+    handler: Api.downloadsList
 }, {
-  path: '/{param*}',
-  method: 'GET',
-  handler: Assets.servePublicDirectory
+    path: '/{param*}',
+    method: 'GET',
+    handler: Assets.servePublicDirectory
 }];
