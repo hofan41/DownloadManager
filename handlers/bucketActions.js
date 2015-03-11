@@ -53,9 +53,6 @@ exports.createDownload = internals.createDownload = function(downloadName, descr
       // If the error is some other problem, throw it.
       internals.defaultError(err);
     }
-  }).then(function() {
-    // Wait for the object to be added
-    return internals.waitFor('objectExists', downloadName);
   });
 };
 

@@ -13,11 +13,21 @@ exports.downloadsList = function(request, reply) {
 exports.createNewDownload = function(request, reply) {
   var that = this;
 
-  return this.s3.createDownload(request.payload.downloadName + '/', request.payload.descriptionText).then(function() {
+  var downloadName = request.payload.downloadName + '/';
+
+  return this.s3.createDownload(downloadName, request.payload.descriptionText).then(function() {
+
     // Return status OK to host
     reply.continue();
+
+    // Wait for the object to be added
+    return that.s3.waitFor('objectExists', downloadName);
+
+  }).then(function() {
+
     // Notify other clients via socket.io
     that.io.emit('refreshDownloadList');
+
   }).catch(function(err) {
     reply({
       message: err.message
@@ -32,13 +42,18 @@ exports.deleteDownload = function(request, reply) {
 
   // Issue delete object request to s3
   return this.s3.deleteObject(downloadName).then(function() {
-    // Wait until the object has been deleted
-    that.s3.waitFor('objectNotExists', downloadName);
-  }).then(function() {
+
     // Return status OK to host
     reply.continue();
+
+    // Wait until the object has been deleted
+    return that.s3.waitFor('objectNotExists', downloadName);
+
+  }).then(function() {
+
     // Notify other clients via socket.io
     that.io.emit('refreshDownloadList');
+
   }).catch(function(err) {
     reply({
       message: err.message

@@ -15,6 +15,6 @@ exports.download = function(request, reply) {
   }).catch(function(err) {
     return reply({
       message: err.message
-    });
+    }).code(400);
   });
 };
