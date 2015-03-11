@@ -30,20 +30,19 @@ exports.validateSettings = internals.validateSettings = function(callback) {
 };
 
 exports.createDownload = internals.createDownload = function(downloadName, descriptionText) {
-  return internals.headObject(downloadName).then(internals.downloadNameAlreadyExistsError,
-    function(err) {
-      // If the error is that the object does not exist
-      if (err.code === 'NotFound') {
-        // Add the object
-        return internals.putObject(downloadName, descriptionText).then(function() {
-          // Wait for the object to be added
-          return internals.waitFor('objectExists', downloadName);
-        });
-      } else {
-        // If the error is some other problem, throw it.
-        internals.defaultError(err);
-      }
-    });
+  return internals.headObject(downloadName).then(internals.downloadNameAlreadyExistsError, function(err) {
+    // If the error is that the object does not exist
+    if (err.code === 'NotFound') {
+      // Add the object
+      return internals.putObject(downloadName, descriptionText);
+    } else {
+      // If the error is some other problem, throw it.
+      internals.defaultError(err);
+    }
+  }).then(function() {
+    // Wait for the object to be added
+    return internals.waitFor('objectExists', downloadName);
+  });
 };
 
 exports.putObject = internals.putObject = function(downloadName, descriptionText) {
