@@ -33,7 +33,7 @@ exports.deleteDownload = function(request, reply) {
   // Issue delete object request to s3
   return this.s3.deleteObject(downloadName).then(function() {
     // Wait until the object has been deleted
-    this.s3.waitFor('objectNotExists', downloadName)
+    this.s3.waitFor('objectNotExists', downloadName);
   }).then(function() {
     // Return status OK to host
     reply.continue();
