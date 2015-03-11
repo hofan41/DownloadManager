@@ -10,6 +10,10 @@ $(function() {
 		serverSide: false,
 		ajax: '/api/downloads',
 		columns: [{
+			data: null,
+			defaultContent: '<button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>',
+			orderable: false
+		}, {
 			data: "Key",
 			render: {
 				display: function(data, type, full, meta) {

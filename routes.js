@@ -3,6 +3,11 @@ var Assets = require('./handlers/assets');
 var Pages = require('./handlers/pages');
 var Api = require('./handlers/api');
 
+var internals = {};
+
+internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64).regex(/^[A-Z0-9 -]+$/i).required();
+internals.joiDescriptionText = Joi.any().label('Description');
+
 // Server Endpoints
 module.exports = [{
   path: '/',
@@ -11,11 +16,25 @@ module.exports = [{
 }, {
   path: '/download/{downloadName}',
   method: 'GET',
-  handler: Pages.download
+  handler: Pages.download,
+  config: {
+    validate: {
+      params: {
+        downloadName: internals.joiDownloadName
+      }
+    }
+  }
 }, {
   path: '/api/download/delete/{downloadName}',
   method: 'GET',
-  handler: Api.deleteDownload
+  handler: Api.deleteDownload,
+  config: {
+    validate: {
+      params: {
+        downloadName: internals.joiDownloadName
+      }
+    }
+  }
 }, {
   path: '/api/downloads/put',
   method: 'PUT',
@@ -23,8 +42,8 @@ module.exports = [{
   config: {
     validate: {
       payload: {
-        downloadName: Joi.string().label('Download Name').min(3).max(64).regex(/^[A-Z0-9 -]+$/i).required(),
-        descriptionText: Joi.any().label('Description')
+        downloadName: internals.joiDownloadName,
+        descriptionText: internals.joiDescriptionText
       }
     }
   }

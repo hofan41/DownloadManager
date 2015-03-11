@@ -17,6 +17,7 @@ server.bind({
 // Declare internals
 var internals = {};
 
+// TODO - Promise-ify this function
 internals.startServer = function() {
   var defaultContext = {
     title: process.env.SITE_TITLE

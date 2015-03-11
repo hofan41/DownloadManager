@@ -1,4 +1,3 @@
-var Promise = require('promise');
 var AWS = require('aws-sdk-promise');
 var Hoek = require('hoek');
 
