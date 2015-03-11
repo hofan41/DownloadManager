@@ -19,6 +19,20 @@ internals.defaultError = function(err) {
   throw err;
 };
 
+internals.getParams = function(downloadName, descriptionText) {
+  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+    Key: downloadName
+  });
+
+  if (descriptionText) {
+    s3Params.Metadata = {
+      Description: descriptionText
+    };
+  }
+
+  return s3Params;
+};
+
 exports.validateSettings = internals.validateSettings = function(callback) {
   return internals.s3.headBucket(internals.defaultS3Params).promise().then(function() {
     console.log('Download manager successfully connected to aws bucket: ' + internals.defaultS3Params.Bucket);
@@ -46,36 +60,25 @@ exports.createDownload = internals.createDownload = function(downloadName, descr
 };
 
 exports.putObject = internals.putObject = function(downloadName, descriptionText) {
-  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: downloadName,
-    Metadata: {
-      Description: descriptionText
-    }
-  });
+  var s3Params = internals.getParams(downloadName, descriptionText);
 
   return internals.s3.putObject(s3Params).promise();
 };
 
 exports.waitFor = internals.waitFor = function(event, downloadName) {
-  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: downloadName
-  });
+  var s3Params = internals.getParams(downloadName);
 
   return internals.s3.waitFor(event, s3Params).promise();
 };
 
 exports.headObject = internals.headObject = function(downloadName) {
-  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: downloadName
-  });
+  var s3Params = internals.getParams(downloadName);
 
   return internals.s3.headObject(s3Params).promise();
 };
 
 exports.getObject = internals.getObject = function(downloadName) {
-  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: downloadName
-  });
+  var s3Params = internals.getParams(downloadName);
 
   return internals.s3.getObject(s3Params).promise();
 };
@@ -85,9 +88,7 @@ exports.listBucket = internals.listBucket = function() {
 };
 
 exports.deleteObject = internals.deleteObject = function(downloadName) {
-  var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-    Key: downloadName
-  });
+  var s3Params = internals.getParams(downloadName);
 
   return internals.s3.deleteObject(s3Params).promise();
 };
