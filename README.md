@@ -5,6 +5,7 @@ Front end for amazon web services S3 built using Hapi, jQuery datatables, and so
 [![Build Status](https://travis-ci.org/hofan41/DownloadManager.svg)](https://travis-ci.org/hofan41/DownloadManager)
 [![Dependencies Status](https://david-dm.org/hofan41/DownloadManager.svg)](https://david-dm.org/hofan41/DownloadManager)
 [![DevDependencies Status](https://david-dm.org/hofan41/DownloadManager/dev-status.svg)](https://david-dm.org/hofan41/DownloadManager#info=devDependencies)
+[![Coverage Status](https://coveralls.io/repos/hofan41/DownloadManager/badge.svg)](https://coveralls.io/r/hofan41/DownloadManager)
 
 ### Configuration
 DownloadManager is configured through the use of environment variables.
