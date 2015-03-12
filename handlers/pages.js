@@ -5,15 +5,13 @@ exports.home = function(request, reply) {
 };
 
 exports.download = function(request, reply) {
-    var viewContext = {
-        downloadName: request.params.downloadName
-    };
-
     this.s3.headObject(request.params.downloadName + '/').then(function(s3Response) {
-        viewContext.download = s3Response.data;
-        reply.view('download', viewContext);
+        reply.view('download', {
+            downloadName: request.params.downloadName,
+            download = s3Response.data
+        });
     }).catch(function(err) {
-        return reply({
+        reply({
             message: err.message
         }).code(400);
     });
