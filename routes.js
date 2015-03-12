@@ -26,7 +26,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/download/{downloadName}',
+    path: '/api/download/{downloadName}/',
     method: 'DELETE',
     handler: Api.deleteDownload,
     config: {

@@ -10,7 +10,7 @@ $(function() {
         '<button type="button" class="btn btn-default deleteDownloadButton">' +
         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
         '</button>';
-    var deleteButton = '<a href="' + downloadNameVar +
+    var deleteButton = '<a href="/api/download/' + downloadNameVar +
         '" role="button" class="btn btn-danger deleteDownloadLink">Delete</a>';
 
     $.fn.dataTable.moment(dateFormat);
@@ -91,7 +91,7 @@ $(function() {
         // Perform ajax request to remove
         $.ajax({
                 type: 'DELETE',
-                url: '/api/download/' + this.href
+                url: this.href
             })
             .fail(function() {
                 // TODO - Figure out what to do if it fails.
