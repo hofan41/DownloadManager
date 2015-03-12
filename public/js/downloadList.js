@@ -47,12 +47,25 @@ $(function() {
     });
 
     dataTable.on('click', 'button.deleteDownloadButton', function(e) {
+        e.stopPropagation();
+
         var deleteLink = $(this).parent().find('a.deleteDownloadLink');
         deleteLink.toggle('slide');
     });
 
+    $('body').on('click', function(e) {
+        var deleteLinks = $('a.deleteDownloadLink');
+        deleteLinks.each(function() {
+            if ($(this).is(":visible")) {
+                $(this).toggle('slide');
+            }
+        });
+    });
+
     dataTable.on('click', 'a.deleteDownloadLink', function(e) {
         e.preventDefault();
+        e.stopPropagation();
+
         $(this).addClass('disabled');
         var self = $(this);
 
