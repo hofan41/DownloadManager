@@ -1,3 +1,5 @@
+'use strict';
+
 // Load modules 
 var Hapi = require('hapi');
 var BucketActions = require('./handlers/bucketActions');

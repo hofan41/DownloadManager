@@ -5,7 +5,8 @@ var Api = require('./handlers/api');
 
 var internals = {};
 
-internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64).regex(/^[A-Z0-9 -]+$/i).required();
+internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64)
+    .regex(/^[A-Z0-9 -]+$/i).required();
 internals.joiDescriptionText = Joi.any().label('Description');
 
 // Server Endpoints
@@ -25,7 +26,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/download/{downloadName}/',
+    path: '/api/download/{downloadName}',
     method: 'DELETE',
     handler: Api.deleteDownload,
     config: {

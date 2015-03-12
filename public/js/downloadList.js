@@ -1,10 +1,17 @@
+'use strict';
+
 $(function() {
     var dateFormat = 'LLL';
     var downloadNameVar = '{downloadName}';
     var downloadNameVarRegex = new RegExp(downloadNameVar, 'g');
-    var downloadLink = '<a href="/download/' + downloadNameVar + '">' + downloadNameVar + '</a>';
-    var deleteIcon = '<button type="button" class="btn btn-default deleteDownloadButton"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
-    var deleteButton = '<a href="/api/download/' + downloadNameVar + '" role="button" class="btn btn-danger deleteDownloadLink">Delete</a>';
+    var downloadLink = '<a href="/download/' + downloadNameVar + '">' +
+        downloadNameVar + '</a>';
+    var deleteIcon =
+        '<button type="button" class="btn btn-default deleteDownloadButton">' +
+        '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
+        '</button>';
+    var deleteButton = '<a href="' + downloadNameVar +
+        '" role="button" class="btn btn-danger deleteDownloadLink">Delete</a>';
 
     $.fn.dataTable.moment(dateFormat);
     var dataTable = $('#downloadList').DataTable({
@@ -16,23 +23,30 @@ $(function() {
             data: null,
             orderable: false,
             render: {
-                display: function(data, type, full, meta) {
-                    var downloadName = full['Key'];
-                    return deleteIcon + '\n\r' + deleteButton.replace(downloadNameVarRegex, downloadName);
+                display: function(data, type, full) {
+                    var downloadName = full.Key;
+                    return deleteIcon + '\n\r' +
+                        deleteButton.replace(
+                            downloadNameVarRegex,
+                            downloadName);
                 }
             }
         }, {
-            data: "Key",
+            data: 'Key',
             render: {
-                display: function(data, type, full, meta) {
-                    var downloadName = data.substring(0, data.length - 1);
-                    return downloadLink.replace(downloadNameVarRegex, downloadName);
+                display: function(data) {
+                    var downloadName = data.substring(
+                        0, data.length - 1);
+                    return downloadLink.replace(
+                        downloadNameVarRegex,
+                        downloadName);
                 }
             }
         }, {
-            data: "LastModified",
-            render: function(data, type, full, meta) {
-                return moment(data).format(dateFormat);
+            data: 'LastModified',
+            render: function(data) {
+                return moment(data).format(
+                    dateFormat);
             }
         }]
     });
@@ -42,14 +56,15 @@ $(function() {
     });
 
     var socket = io();
-    socket.on('refreshDownloadList', function(msg) {
+    socket.on('refreshDownloadList', function() {
         dataTable.ajax.reload(null, false);
     });
 
     // Anytime the user clicks on a trashcan button, the delete link next
     // to it will be shown.
-    $(document).on('click', 'button.deleteDownloadButton', function(e) {
-        var deleteLink = $(this).parent().find('a.deleteDownloadLink');
+    $(document).on('click', 'button.deleteDownloadButton', function() {
+        var deleteLink = $(this).parent().find(
+            'a.deleteDownloadLink');
         deleteLink.toggle('slide');
     });
 
@@ -60,7 +75,8 @@ $(function() {
 
             deleteLinks.each(function() {
                 // Do not toggle for animated buttons
-                if ($(this).is(":visible") && !$(this).is(':animated')) {
+                if ($(this).is(':visible') &&
+                    !$(this).is(':animated')) {
                     $(this).toggle('slide');
                 }
             });
@@ -71,18 +87,14 @@ $(function() {
         e.preventDefault();
 
         $(this).addClass('disabled');
-        var self = $(this);
 
         // Perform ajax request to remove
         $.ajax({
                 type: 'DELETE',
-                url: this.href
+                url: '/api/download/' + this.href
             })
-            .done(function(data, textStatus, jqXHR) {
-                // Do nothing, this row should automatically disapppear.
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                // Do nothing.
+            .fail(function() {
+                // TODO - Figure out what to do if it fails.
             });
     });
 });

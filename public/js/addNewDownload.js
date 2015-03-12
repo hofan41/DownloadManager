@@ -1,8 +1,11 @@
+'use strict';
+
 $(function() {
     var addNewDownloadModal = $('#addNewDownload');
     var addNewDownloadForm = $('form', addNewDownloadModal);
     var addNewDownloadAlert = $('.alert', addNewDownloadModal);
-    var addNewDownloadButton = $('button#addNewDownloadSave', addNewDownloadModal);
+    var addNewDownloadButton = $('button#addNewDownloadSave',
+        addNewDownloadModal);
 
     var resetAddNewDownloadForm = function() {
         addNewDownloadAlert.hide();
@@ -21,12 +24,13 @@ $(function() {
                 url: '/api/downloads',
                 data: addNewDownloadForm.serialize()
             })
-            .done(function(data, textStatus, jqXHR) {
+            .done(function() {
                 addNewDownloadModal.modal('hide');
             })
-            .fail(function(jqXHR, textStatus, errorThrown) {
+            .fail(function(jqXHR) {
                 if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
-                    addNewDownloadAlert.text(jqXHR.responseJSON.message);
+                    addNewDownloadAlert.text(jqXHR.responseJSON
+                        .message);
                     addNewDownloadAlert.fadeIn(500);
                 }
             })
@@ -35,11 +39,11 @@ $(function() {
             });
     };
 
-    addNewDownloadModal.on('show.bs.modal', function(e) {
+    addNewDownloadModal.on('show.bs.modal', function() {
         resetAddNewDownloadForm();
     });
 
-    addNewDownloadModal.on('shown.bs.modal', function(e) {
+    addNewDownloadModal.on('shown.bs.modal', function() {
         $(this).find('input:first').focus();
     });
 
