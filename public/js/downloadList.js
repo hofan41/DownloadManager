@@ -43,28 +43,32 @@ $(function() {
 
     var socket = io();
     socket.on('refreshDownloadList', function(msg) {
-        dataTable.ajax.reload();
+        dataTable.ajax.reload(null, false);
     });
 
-    dataTable.on('click', 'button.deleteDownloadButton', function(e) {
-        e.stopPropagation();
-
+    // Anytime the user clicks on a trashcan button, the delete link next
+    // to it will be shown.
+    $(document).on('click', 'button.deleteDownloadButton', function(e) {
         var deleteLink = $(this).parent().find('a.deleteDownloadLink');
         deleteLink.toggle('slide');
     });
 
-    $('body').on('click', function(e) {
-        var deleteLinks = $('a.deleteDownloadLink');
-        deleteLinks.each(function() {
-            if ($(this).is(":visible")) {
-                $(this).toggle('slide');
-            }
-        });
+    // Anytime the user clicks, if there is a delete button shown, hide it.
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('a.deleteDownloadLink').length) {
+            var deleteLinks = $('a.deleteDownloadLink');
+
+            deleteLinks.each(function() {
+                // Do not toggle for animated buttons
+                if ($(this).is(":visible") && !$(this).is(':animated')) {
+                    $(this).toggle('slide');
+                }
+            });
+        }
     });
 
-    dataTable.on('click', 'a.deleteDownloadLink', function(e) {
+    $(document).on('click', 'a.deleteDownloadLink', function(e) {
         e.preventDefault();
-        e.stopPropagation();
 
         $(this).addClass('disabled');
         var self = $(this);
