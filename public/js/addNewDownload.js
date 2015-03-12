@@ -18,7 +18,7 @@ $(function() {
         addNewDownloadButton.prop('disabled', true);
         $.ajax({
                 type: 'PUT',
-                url: '/api/downloads/put',
+                url: '/api/downloads',
                 data: addNewDownloadForm.serialize()
             })
             .done(function(data, textStatus, jqXHR) {
@@ -38,6 +38,11 @@ $(function() {
     addNewDownloadModal.on('show.bs.modal', function(e) {
         resetAddNewDownloadForm();
     });
+
+    addNewDownloadModal.on('shown.bs.modal', function(e) {
+        $(this).find('input:first').focus();
+    });
+
 
     addNewDownloadButton.click(submitAddNewDownloadForm);
 

@@ -25,8 +25,8 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/download/delete/{downloadName}',
-    method: 'GET',
+    path: '/api/download/{downloadName}/',
+    method: 'DELETE',
     handler: Api.deleteDownload,
     config: {
         validate: {
@@ -36,7 +36,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/downloads/put',
+    path: '/api/downloads',
     method: 'PUT',
     handler: Api.createNewDownload,
     config: {
