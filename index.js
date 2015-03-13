@@ -4,28 +4,28 @@
 var Hapi = require('hapi');
 var BucketActions = require('./handlers/bucketActions');
 
-var server = new Hapi.Server();
-server.connection({
+// Declare internals
+var internals = {};
+
+exports.server = internals.server = new Hapi.Server();
+
+internals.server.connection({
     port: Number(process.env.PORT || 8080)
 });
 
-var io = require('socket.io')(server.listener);
+var io = require('socket.io')(internals.server.listener);
 
-server.bind({
+internals.server.bind({
     io: io,
     s3: BucketActions
 });
 
-// Declare internals
-var internals = {};
-
-// TODO - Promise-ify this function
-internals.startServer = function() {
+exports.configureServer = internals.configureServer = function() {
     var defaultContext = {
         title: process.env.SITE_TITLE
     };
 
-    server.views({
+    internals.server.views({
         engines: {
             hbs: require('handlebars')
         },
@@ -37,16 +37,21 @@ internals.startServer = function() {
         context: defaultContext
     });
 
-    server.route(require('./routes'));
+    internals.server.route(require('./routes'));
+};
 
-    server.start(function() {
-        console.log('Server listening at:', server.info.uri);
+exports.startServer = internals.startServer = function() {
+    BucketActions.validateSettings().then(function() {
+        internals.configureServer();
+
+        internals.server.start(function() {
+            console.log('Server listening at:', internals.server
+                .info.uri);
+        });
+    }).catch(function(err) {
+        console.error(err);
+        process.exit(1);
     });
 };
 
-BucketActions.validateSettings().then(function() {
-    internals.startServer();
-}).catch(function(err) {
-    console.error(err);
-    process.exit(1);
-});
+internals.startServer();
