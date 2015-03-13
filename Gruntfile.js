@@ -43,10 +43,11 @@ module.exports = function(grunt) {
         },
         coveralls: {
             options: {
-                src: 'coverage/lcov.info',
                 force: true
             },
-            DownloadManager: {}
+            DownloadManager: {
+                src: 'coverage/lcov.info'
+            }
         }
     });
 
@@ -59,5 +60,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-coveralls');
 
     // Set default tasks
-    grunt.registerTask('default', ['jshint', 'mocha_istanbul', 'coveralls']);
+    grunt.registerTask('default', ['jshint', 'mocha_istanbul']);
 };
