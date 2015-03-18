@@ -14,3 +14,14 @@ describe('GET /', function() {
         });
     });
 });
+
+describe('GET /download/no-no', function() {
+    it('non existent item returns 400', function(done) {
+        downloadManager.server.inject({
+            url: '/download/no-no'
+        }, function(res) {
+            assert.equal(res.statusCode, 400);
+            done();
+        });
+    });
+});

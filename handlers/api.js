@@ -34,10 +34,35 @@ exports.createNewDownload = function(request, reply) {
             self.io.emit('refreshDownloadList');
 
         }).catch(function(err) {
-            reply({
+            return reply({
                 message: err.message
             }).code(400);
         });
+};
+
+exports.getSignedPutDownloadUrl = function(request, reply) {
+    var self = this;
+
+    var downloadName = request.params.downloadName + '/';
+
+    return this.s3.doesDownloadExist(downloadName).then(function(
+        downloadExists) {
+        if (downloadExists === true) {
+            return self.s3.getSignedPutObjectUrl(downloadName +
+                request.query.s3ObjectName,
+                request.query.s3ObjectType);
+        } else {
+            throw new Error('Download does not exist!');
+        }
+    }).then(function(url) {
+        return reply({
+            signedRequest: url
+        });
+    }).catch(function(err) {
+        return reply({
+            message: err.message
+        }).code(400);
+    });
 };
 
 exports.deleteDownload = function(request, reply) {
@@ -45,14 +70,22 @@ exports.deleteDownload = function(request, reply) {
 
     var downloadName = request.params.downloadName + '/';
 
-    // Issue delete object request to s3
-    return this.s3.deleteObject(downloadName).then(function() {
+    return this.s3.doesDownloadExist(downloadName).then(function(
+        downloadExists) {
+        if (downloadExists === true) {
+            // Issue delete object request to s3
+            return self.s3.deleteObject(downloadName);
+        } else {
+            throw new Error('Download does not exist!');
+        }
+    }).then(function() {
 
         // Return status OK to host
         reply.continue();
 
         // Wait until the object has been deleted
-        return self.s3.waitFor('objectNotExists', downloadName);
+        return self.s3.waitFor('objectNotExists',
+            downloadName);
 
     }).then(function() {
 
@@ -60,7 +93,7 @@ exports.deleteDownload = function(request, reply) {
         self.io.emit('refreshDownloadList');
 
     }).catch(function(err) {
-        reply({
+        return reply({
             message: err.message
         }).code(400);
     });

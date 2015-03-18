@@ -11,7 +11,10 @@ exports.download = function(request, reply) {
         s3Response) {
         reply.view('download', {
             downloadName: request.params.downloadName,
-            download: s3Response.data
+            download: s3Response.data,
+            jsFiles: ['/js/s3Upload.js',
+                '/js/uploadNewDownloadFile.js'
+            ]
         });
     }).catch(function(err) {
         reply({

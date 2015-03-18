@@ -1,5 +1,6 @@
 'use strict';
 
+var Promise = require('promise');
 var AWS = require('aws-sdk-promise');
 var Hoek = require('hoek');
 
@@ -20,20 +21,6 @@ internals.defaultError = function(err) {
     throw err;
 };
 
-internals.getParams = function(downloadName, descriptionText) {
-    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-        Key: downloadName
-    });
-
-    if (descriptionText) {
-        s3Params.Metadata = {
-            Description: descriptionText
-        };
-    }
-
-    return s3Params;
-};
-
 exports.validateSettings = internals.validateSettings = function() {
     return internals.s3.headBucket(internals.defaultS3Params).promise().then(
         function() {
@@ -52,14 +39,28 @@ exports.validateSettings = internals.validateSettings = function() {
 
 exports.createDownload = internals.createDownload = function(downloadName,
     descriptionText) {
+    return internals.doesDownloadExist(downloadName).then(function(
+        downloadExists) {
+        if (downloadExists === true) {
+            internals.downloadNameAlreadyExistsError();
+        } else {
+            return internals.putObject(downloadName,
+                descriptionText);
+        }
+    });
+};
+
+exports.doesDownloadExist = internals.doesDownloadExist = function(
+    downloadName) {
     return internals.headObject(downloadName)
-        .then(internals.downloadNameAlreadyExistsError,
+        .then(function() {
+                return true;
+            },
             function(err) {
                 // If the error is that the object does not exist
                 if (err.code === 'NotFound') {
                     // Add the object
-                    return internals.putObject(downloadName,
-                        descriptionText);
+                    return false;
                 } else {
                     // If the error is some other problem, throw it.
                     internals.defaultError(err);
@@ -69,25 +70,36 @@ exports.createDownload = internals.createDownload = function(downloadName,
 
 exports.putObject = internals.putObject = function(downloadName,
     descriptionText) {
-    var s3Params = internals.getParams(downloadName, descriptionText);
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+        Key: downloadName,
+        Metadata: {
+            Description: descriptionText
+        }
+    });
 
     return internals.s3.putObject(s3Params).promise();
 };
 
 exports.waitFor = internals.waitFor = function(event, downloadName) {
-    var s3Params = internals.getParams(downloadName);
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+        Key: downloadName
+    });
 
     return internals.s3.waitFor(event, s3Params).promise();
 };
 
 exports.headObject = internals.headObject = function(downloadName) {
-    var s3Params = internals.getParams(downloadName);
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+        Key: downloadName
+    });
 
     return internals.s3.headObject(s3Params).promise();
 };
 
 exports.getObject = internals.getObject = function(downloadName) {
-    var s3Params = internals.getParams(downloadName);
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+        Key: downloadName
+    });
 
     return internals.s3.getObject(s3Params).promise();
 };
@@ -97,7 +109,32 @@ exports.listBucket = internals.listBucket = function() {
 };
 
 exports.deleteObject = internals.deleteObject = function(downloadName) {
-    var s3Params = internals.getParams(downloadName);
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+        Key: downloadName
+    });
 
     return internals.s3.deleteObject(s3Params).promise();
+};
+
+exports.getSignedPutObjectUrl = internals.getSignedPutObjectUrl = function(
+    downloadName, contentType) {
+
+    return new Promise(function(accept, reject) {
+        var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+            Key: downloadName,
+            Expires: 60,
+            ContentType: contentType
+        });
+
+        // aws-sdk-promise does not work on this function because getSignedUrl 
+        // specifies a "synchronous" version that takes in two parameters.
+        internals.s3.getSignedUrl('putObject', s3Params, function(
+            err, url) {
+            if (err) {
+                reject(err);
+            } else {
+                accept(url);
+            }
+        });
+    });
 };

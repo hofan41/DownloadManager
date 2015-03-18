@@ -7,11 +7,12 @@ $(function() {
     var downloadLink = '<a href="/download/' + downloadNameVar + '">' +
         downloadNameVar + '</a>';
     var deleteIcon =
+        '<div style="display: inline-block;">' +
         '<button type="button" class="btn btn-default deleteDownloadButton">' +
         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
         '</button>';
     var deleteButton = '<a href="/api/download/' + downloadNameVar +
-        '" role="button" class="btn btn-danger deleteDownloadLink">Delete</a>';
+        '" role="button" class="btn btn-danger deleteDownloadLink">Delete</a></div>';
 
     $.fn.dataTable.moment(dateFormat);
     var dataTable = $('#downloadList').DataTable({
@@ -65,7 +66,7 @@ $(function() {
     $(document).on('click', 'button.deleteDownloadButton', function() {
         var deleteLink = $(this).parent().find(
             'a.deleteDownloadLink');
-        deleteLink.toggle('slide');
+        deleteLink.show('slide');
     });
 
     // Anytime the user clicks, if there is a delete button shown, hide it.
@@ -77,7 +78,7 @@ $(function() {
                 // Do not toggle for animated buttons
                 if ($(this).is(':visible') &&
                     !$(this).is(':animated')) {
-                    $(this).toggle('slide');
+                    $(this).hide('slide');
                 }
             });
         }

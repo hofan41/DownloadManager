@@ -9,6 +9,9 @@ internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64)
     .regex(/^[A-Z0-9 -]+$/i).required();
 internals.joiDescriptionText = Joi.any().label('Description');
 
+internals.s3ObjectName = Joi.string().required();
+internals.s3ObjectType = Joi.string().allow('');
+
 // Server Endpoints
 module.exports = [{
     path: '/',
@@ -33,6 +36,21 @@ module.exports = [{
         validate: {
             params: {
                 downloadName: internals.joiDownloadName
+            }
+        }
+    }
+}, {
+    path: '/api/download/{downloadName}/signedPut',
+    method: 'GET',
+    handler: Api.getSignedPutDownloadUrl,
+    config: {
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName
+            },
+            query: {
+                s3ObjectName: internals.s3ObjectName,
+                s3ObjectType: internals.s3ObjectType
             }
         }
     }
