@@ -19,7 +19,6 @@ exports.download = function(request, reply) {
             ]
         });
     }).catch(function(err) {
-        console.log(err);
         reply({
             message: err.message
         }).code(400);

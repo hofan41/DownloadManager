@@ -15,7 +15,7 @@ describe('GET /', function() {
     });
 });
 
-describe('GET /download/no-no', function() {
+describe('GET /download/no-no/', function() {
     it('non existent item returns 400', function(done) {
         downloadManager.server.inject({
             url: '/download/no-no'
