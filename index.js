@@ -18,7 +18,7 @@ io.on('connection', function(socket) {
     socket.on('newFileUploaded', function(downloadName) {
         var broadcastEvent = 'refreshDownloadList.' +
             downloadName;
-        socket.emit(broadcastEvent);
+        io.sockets.emit(broadcastEvent);
     });
 });
 
