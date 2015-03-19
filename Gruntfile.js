@@ -3,6 +3,11 @@
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        env: {
+            dev: {
+                src: '.env'
+            }
+        },
         jshint: {
             options: {
                 browser: true,
@@ -33,15 +38,11 @@ module.exports = function(grunt) {
                 'public/**/*.js'
             ]
         },
-        mocha_istanbul: {
-            coverage: {
-                options: {
-                    coverage: true,
-                    reportFormats: ['lcovonly'],
-                    reporter: 'spec'
-                },
-                src: 'test'
-            }
+        lab: {
+            color: true,
+            coverage: true,
+            reporter: 'lcov',
+            reportFile: 'coverage/lcov.info'
         },
         coveralls: {
             options: {
@@ -51,16 +52,22 @@ module.exports = function(grunt) {
                 src: 'coverage/lcov.info'
             }
         }
+
     });
+
+    grunt.loadNpmTasks('grunt-env');
 
     // Load the plugin that provides the jshint task.
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
-    // load Mocha
-    grunt.loadNpmTasks('grunt-mocha-istanbul');
+    // Load hapijs/lab
+    grunt.loadNpmTasks('grunt-lab');
 
+    // load Coveralls
     grunt.loadNpmTasks('grunt-coveralls');
 
     // Set default tasks
-    grunt.registerTask('default', ['jshint', 'mocha_istanbul']);
+    grunt.registerTask('default', ['test', 'jshint', 'coveralls']);
+
+    grunt.registerTask('test', ['env:dev', 'lab']);
 };

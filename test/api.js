@@ -1,26 +1,27 @@
 'use strict';
+var Code = require('code');
+var Lab = require('lab');
+var lab = exports.lab = Lab.script();
 
-var assert = require('assert');
-var downloadManager = require('../index');
+var downloadManager = require('../');
 downloadManager.configureServer();
 
-describe('GET /', function() {
-    it('returns 200', function(done) {
+lab.experiment('HTTP Tests', function() {
+    lab.test('GET /', function(done) {
         downloadManager.server.inject({
-            url: '/'
+            url: '/',
+            method: 'GET'
         }, function(res) {
-            assert.equal(res.statusCode, 200);
+            Code.expect(res.statusCode).to.equal(200);
             done();
         });
     });
-});
 
-describe('GET /download/no-no/', function() {
-    it('non existent item returns 400', function(done) {
+    lab.test('GET /download/no-no/', function(done) {
         downloadManager.server.inject({
-            url: '/download/no-no'
+            url: '/download/no-no/'
         }, function(res) {
-            assert.equal(res.statusCode, 400);
+            Code.expect(res.statusCode).to.equal(400);
             done();
         });
     });

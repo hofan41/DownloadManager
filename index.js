@@ -56,8 +56,7 @@ exports.startServer = internals.startServer = function() {
                 console.error(err);
             } else {
                 console.log('Server listening at:',
-                    internals.server
-                    .info.uri);
+                    internals.server.info.uri);
             }
         });
     }).catch(function(err) {
