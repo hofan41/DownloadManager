@@ -14,6 +14,13 @@ internals.server.connection({
 });
 
 var io = require('socket.io')(internals.server.listener);
+io.on('connection', function(socket) {
+    socket.on('newFileUploaded', function(downloadName) {
+        var broadcastEvent = 'refreshDownloadList.' +
+            downloadName;
+        socket.emit(broadcastEvent);
+    });
+});
 
 internals.server.bind({
     io: io,

@@ -18,7 +18,7 @@ module.exports = [{
     method: 'GET',
     handler: Pages.home
 }, {
-    path: '/download/{downloadName}',
+    path: '/download/{downloadName}/',
     method: 'GET',
     handler: Pages.download,
     config: {
@@ -67,9 +67,20 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/downloads',
+    path: '/api/list',
     method: 'GET',
     handler: Api.downloadsList
+}, {
+    path: '/download/{downloadName}/api/list',
+    method: 'GET',
+    handler: Api.fileList,
+    config: {
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName
+            }
+        }
+    }
 }, {
     path: '/{param*}',
     method: 'GET',

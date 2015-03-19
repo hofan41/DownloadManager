@@ -3,11 +3,31 @@
 exports.downloadsList = function(request, reply) {
     // listBucket only returns 1000 items. 
     // Need to update this function to retrieve all items > 1000.
-    return this.s3.listBucket().then(function(s3Response) {
+    return this.s3.listBucketDirectories().then(function(directories) {
         reply({
-            data: s3Response.data.Contents
+            data: directories
         });
     }).catch(function(err) {
+        reply({
+            message: err.message
+        }).code(400);
+    });
+};
+
+exports.fileList = function(request, reply) {
+    var downloadName = request.params.downloadName + '/';
+    return this.s3.listFiles(downloadName).then(
+        function(files) {
+            for (var i = 0; i < files.length; ++i) {
+                if (files[i].Key === downloadName) {
+                    files.splice(i, 1);
+                    break;
+                }
+            }
+            reply({
+                data: files
+            });
+        }).catch(function(err) {
         reply({
             message: err.message
         }).code(400);
@@ -70,14 +90,23 @@ exports.deleteDownload = function(request, reply) {
 
     var downloadName = request.params.downloadName + '/';
 
-    return this.s3.doesDownloadExist(downloadName).then(function(
-        downloadExists) {
-        if (downloadExists === true) {
-            // Issue delete object request to s3
-            return self.s3.deleteObject(downloadName);
-        } else {
-            throw new Error('Download does not exist!');
-        }
+    // Retrieve all of the files related to the downloadName
+    return this.s3.listFiles(downloadName).then(function(files) {
+        var deleteFiles = [];
+        // Retrieve only the Key field from the file
+        // since aws rejects requests that contain unknown fields.
+        files.forEach(function(file) {
+            deleteFiles.push({
+                Key: file.Key
+            });
+        });
+
+        return self.s3.deleteObjects({
+            Delete: {
+                Objects: deleteFiles
+            }
+        });
+
     }).then(function() {
 
         // Return status OK to host
@@ -97,4 +126,5 @@ exports.deleteDownload = function(request, reply) {
             message: err.message
         }).code(400);
     });
+
 };

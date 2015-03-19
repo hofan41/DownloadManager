@@ -32,10 +32,6 @@
             return console.log('base.onError()', status);
         };
 
-        S3Upload.prototype.onComplete = function(err) {
-            return console.log('base.onComplete()', err);
-        }
-
         S3Upload.prototype.handleFileSelect = function(fileElement) {
             var f, files, output, _i, _len, _results;
             this.onProgress(0, 'Upload started.');

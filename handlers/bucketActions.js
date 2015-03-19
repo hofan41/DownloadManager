@@ -104,8 +104,33 @@ exports.getObject = internals.getObject = function(downloadName) {
     return internals.s3.getObject(s3Params).promise();
 };
 
-exports.listBucket = internals.listBucket = function() {
-    return internals.s3.listObjects(internals.defaultS3Params).promise();
+exports.listBucketDirectories = internals.listBucketDirectories = function() {
+    return internals.listBucket({
+        Delimiter: '/'
+    }).then(function(response) {
+        return response.data.CommonPrefixes;
+    });
+};
+
+exports.listFiles = internals.listFiles = function(downloadName) {
+    return internals.listBucket({
+        Prefix: downloadName,
+        Delimiter: '/'
+    }).then(function(response) {
+        return response.data.Contents;
+    });
+};
+
+exports.listBucket = internals.listBucket = function(params) {
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, params);
+
+    return internals.s3.listObjects(s3Params).promise();
+};
+
+exports.deleteObjects = internals.deleteObjects = function(params) {
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, params);
+
+    return internals.s3.deleteObjects(s3Params).promise();
 };
 
 exports.deleteObject = internals.deleteObject = function(downloadName) {

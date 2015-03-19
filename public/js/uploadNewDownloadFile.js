@@ -56,12 +56,13 @@ $(function() {
             function() {
                 self.removeClass('disabled');
                 $('#' + uploadFileId).val('');
+                var socket = io();
+                socket.emit('newFileUploaded', internals.downloadName);
             });
     });
 
     $('#' + uploadFileId).on('change', function() {
         $('#' + uploadFileProgressId).addClass('collapse');
     });
-
 
 });

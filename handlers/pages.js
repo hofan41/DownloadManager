@@ -7,16 +7,19 @@ exports.home = function(request, reply) {
 };
 
 exports.download = function(request, reply) {
-    this.s3.headObject(request.params.downloadName + '/').then(function(
+    var downloadName = request.params.downloadName + '/';
+    this.s3.headObject(downloadName).then(function(
         s3Response) {
         reply.view('download', {
             downloadName: request.params.downloadName,
             download: s3Response.data,
             jsFiles: ['/js/s3Upload.js',
-                '/js/uploadNewDownloadFile.js'
+                '/js/uploadNewDownloadFile.js',
+                '/js/downloadFileList.js'
             ]
         });
     }).catch(function(err) {
+        console.log(err);
         reply({
             message: err.message
         }).code(400);

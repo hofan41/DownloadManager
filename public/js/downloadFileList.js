@@ -1,52 +1,60 @@
 /*
  * jQuery Datatables
- * Displays the top level directories within the download manager's bucket.
+ * Displays the files available inside a specific top level directory.
  *
  */
 
 'use strict';
 
 $(function() {
-    var downloadNameVar = '{downloadName}';
-    var downloadNameVarRegex = new RegExp(downloadNameVar, 'g');
-    var downloadLink = '<a href="/download/' + downloadNameVar + '/">' +
-        downloadNameVar + '</a>';
+    var dateFormat = 'LLL';
+    var fileNameVar = '{fileName}';
+    var fileNameVarRegex = new RegExp(fileNameVar, 'g');
+    var fileLink = '<a href="/download/' + fileNameVar + '">' +
+        fileNameVar + '</a>';
     var deleteIcon =
         '<div style="display: inline-block;">' +
         '<button type="button" class="btn btn-default deleteDownloadButton">' +
         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
         '</button>';
-    var deleteButton = '<a href="/api/download/' + downloadNameVar +
+    var deleteButton = '<a href="/api/download/' + fileNameVar +
         '" role="button" class="btn btn-danger deleteDownloadLink">' +
         'Delete</a></div>';
 
-    var dataTable = $('#downloadList').DataTable({
+    $.fn.dataTable.moment(dateFormat);
+    var dataTable = $('#downloadFileList').DataTable({
         processing: true,
         serverSide: false,
         ajax: 'api/list',
-        order: [1, 'asc'],
+        order: [2, 'desc'],
         columns: [{
             data: null,
             orderable: false,
             render: {
                 display: function(data, type, full) {
-                    var downloadName = full.Prefix;
+                    var fileName = full.Key;
                     return deleteIcon + '\n\r' +
                         deleteButton.replace(
-                            downloadNameVarRegex,
-                            downloadName);
+                            fileNameVarRegex,
+                            fileName);
                 }
             }
         }, {
-            data: 'Prefix',
+            data: 'Key',
             render: {
                 display: function(data) {
-                    var downloadName = data.substring(
-                        0, data.length - 1);
-                    return downloadLink.replace(
-                        downloadNameVarRegex,
-                        downloadName);
+                    var fileName = data;
+                    return '<a href="/download/' +
+                        fileName + '">' + fileName.split(
+                            /(\\|\/)/g).pop() +
+                        '</a>';
                 }
+            }
+        }, {
+            data: 'LastModified',
+            render: function(data) {
+                return moment(data).format(
+                    dateFormat);
             }
         }]
     });
@@ -56,7 +64,8 @@ $(function() {
     });
 
     var socket = io();
-    socket.on('refreshDownloadList', function() {
+    var refreshEvent = 'refreshDownloadList.' + internals.downloadName;
+    socket.on(refreshEvent, function() {
         dataTable.ajax.reload(null, false);
     });
 
