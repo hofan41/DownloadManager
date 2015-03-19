@@ -10,8 +10,6 @@ $(function() {
     var dateFormat = 'LLL';
     var fileNameVar = '{fileName}';
     var fileNameVarRegex = new RegExp(fileNameVar, 'g');
-    var fileLink = '<a href="/download/' + fileNameVar + '">' +
-        fileNameVar + '</a>';
     var deleteIcon =
         '<div style="display: inline-block;">' +
         '<button type="button" class="btn btn-default deleteDownloadButton">' +

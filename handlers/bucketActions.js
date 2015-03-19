@@ -96,14 +96,6 @@ exports.headObject = internals.headObject = function(downloadName) {
     return internals.s3.headObject(s3Params).promise();
 };
 
-exports.getObject = internals.getObject = function(downloadName) {
-    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-        Key: downloadName
-    });
-
-    return internals.s3.getObject(s3Params).promise();
-};
-
 exports.listBucketDirectories = internals.listBucketDirectories = function() {
     return internals.listBucket({
         Delimiter: '/'

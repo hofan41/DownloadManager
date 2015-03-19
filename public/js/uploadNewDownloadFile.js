@@ -19,10 +19,10 @@ var uploadNewDownloadFile = function(getPutUrl, fileDomSelector, progressDiv,
     progressBarSelector.addClass('progress-bar progress-bar-striped active');
     progressBarSelector.width(0);
 
-    var s3Upload = new S3Upload({
+    new S3Upload({
         fileDomSelector: fileDomSelector,
         s3SignPutUrl: getPutUrl,
-        onProgress: function(percent, message) {
+        onProgress: function(percent) {
             progressBarSelector.width(percent + '%');
         },
         onFinishS3Put: function() {
