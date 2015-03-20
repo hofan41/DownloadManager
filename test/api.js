@@ -4,7 +4,6 @@ var Lab = require('lab');
 var lab = exports.lab = Lab.script();
 
 var downloadManager = require('../');
-downloadManager.configureServer();
 
 lab.experiment('HTTP Tests', function() {
     lab.test('GET /', function(done) {

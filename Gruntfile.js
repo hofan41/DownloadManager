@@ -41,6 +41,7 @@ module.exports = function(grunt) {
         lab: {
             color: true,
             coverage: true,
+            verbose: true,
             reporter: 'lcov',
             reportFile: 'coverage/lcov.info'
         },

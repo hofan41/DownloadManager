@@ -27,30 +27,26 @@ internals.server.bind({
     s3: BucketActions
 });
 
-exports.configureServer = internals.configureServer = function() {
-    var defaultContext = {
-        title: process.env.SITE_TITLE
-    };
-
-    internals.server.views({
-        engines: {
-            hbs: require('handlebars')
-        },
-        relativeTo: __dirname,
-        path: './views',
-        layoutPath: './views/layout',
-        layout: true,
-        isCached: false,
-        context: defaultContext
-    });
-
-    internals.server.route(require('./routes'));
+internals.defaultContext = {
+    title: process.env.SITE_TITLE
 };
+
+internals.server.views({
+    engines: {
+        hbs: require('handlebars')
+    },
+    relativeTo: __dirname,
+    path: './views',
+    layoutPath: './views/layout',
+    layout: true,
+    isCached: false,
+    context: internals.defaultContext
+});
+
+internals.server.route(require('./routes'));
 
 exports.startServer = internals.startServer = function() {
     BucketActions.validateSettings().then(function() {
-        internals.configureServer();
-
         internals.server.start(function(err) {
             if (err) {
                 console.error(err);
