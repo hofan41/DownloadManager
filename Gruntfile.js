@@ -39,11 +39,15 @@ module.exports = function(grunt) {
             ]
         },
         lab: {
-            color: true,
-            coverage: true,
-            verbose: true,
-            reporter: 'lcov',
-            reportFile: 'coverage/lcov.info'
+            lcov: {
+                coverage: true,
+                reporter: 'lcov',
+                reportFile: 'coverage/lcov.info'
+            },
+            console: {
+                color: true,
+                verbose: true
+            }
         },
         coveralls: {
             options: {
@@ -70,5 +74,5 @@ module.exports = function(grunt) {
     // Set default tasks
     grunt.registerTask('default', ['test', 'jshint', 'coveralls']);
 
-    grunt.registerTask('test', ['env:dev', 'lab']);
+    grunt.registerTask('test', ['env:dev', 'lab:console', 'lab:lcov']);
 };
