@@ -11,17 +11,78 @@ lab.experiment('HTTP Tests', function() {
             url: '/',
             method: 'GET'
         }, function(res) {
-            Code.expect(res.statusCode).to.equal(200);
+            Code.expect(res.statusCode, 'Status Code').to
+                .equal(200);
             done();
         });
     });
 
-    lab.test('GET /download/no-no/', function(done) {
+    lab.test('GET /download/test123/', function(done) {
         downloadManager.server.inject({
-            url: '/download/no-no/'
+            url: '/download/test123/'
         }, function(res) {
-            Code.expect(res.statusCode).to.equal(400);
+            Code.expect(res.statusCode, 'Status Code').to
+                .equal(400);
             done();
         });
     });
+
+    lab.test('PUT /api/downloads', function(done) {
+        downloadManager.server.inject({
+            url: '/api/downloads',
+            method: 'PUT',
+            payload: {
+                downloadName: 'test123',
+                descriptionText: 'lab test!'
+            }
+        }, function(res) {
+            Code.expect(res.statusCode, 'Status Code').to
+                .equal(200);
+            done();
+        });
+    });
+
+    lab.test('PUT /api/downloads again', function(done) {
+        downloadManager.server.inject({
+            url: '/api/downloads',
+            method: 'PUT',
+            payload: {
+                downloadName: 'test123',
+                descriptionText: 'lab test!'
+            }
+        }, function(res) {
+            Code.expect(res.statusCode, 'Status Code').to
+                .equal(400);
+            done();
+        });
+    });
+
+    lab.test(
+        'GET /api/download/test123/signedPut?s3ObjectName=testDownload',
+        function(done) {
+            downloadManager.server.inject({
+                url: '/api/download/test123/signedPut' +
+                    '?s3ObjectName=testDownload',
+                method: 'GET'
+            }, function(res) {
+                Code.expect(res.statusCode, 'Status Code').to
+                    .equal(200);
+                Code.expect(res.result.signedRequest,
+                    'Signed URL').to.be.a.string();
+                done();
+            });
+        });
+
+    lab.test('DELETE /api/download/test123/', function(done) {
+        downloadManager.server.inject({
+            url: '/api/download/test123/',
+            method: 'DELETE'
+        }, function(res) {
+            Code.expect(res.statusCode, 'Status Code').to
+                .equal(200);
+            done();
+        });
+    });
+
+
 });

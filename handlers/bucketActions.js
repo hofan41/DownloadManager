@@ -22,19 +22,7 @@ internals.defaultError = function(err) {
 };
 
 exports.validateSettings = internals.validateSettings = function() {
-    return internals.s3.headBucket(internals.defaultS3Params).promise().then(
-        function() {
-            console.log(
-                'Download manager successfully connected to aws bucket: ' +
-                internals.defaultS3Params.Bucket);
-        },
-        function(err) {
-            console.log(
-                'Download manager could not access aws bucket: ' +
-                internals.defaultS3Params.Bucket);
-            console.log(JSON.stringify(err));
-            throw err;
-        });
+    return internals.s3.headBucket(internals.defaultS3Params).promise();
 };
 
 exports.createDownload = internals.createDownload = function(downloadName,

@@ -50,9 +50,6 @@ exports.startServer = internals.startServer = function() {
         internals.server.start(function(err) {
             if (err) {
                 console.error(err);
-            } else {
-                console.log('Server listening at:',
-                    internals.server.info.uri);
             }
         });
     }).catch(function(err) {
