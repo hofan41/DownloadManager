@@ -85,6 +85,41 @@ exports.getSignedPutDownloadUrl = function(request, reply) {
     });
 };
 
+exports.downloadFile = function(request, reply) {
+    reply.continue();
+};
+
+exports.deleteFile = function(request, reply) {
+    var self = this;
+
+    var fileName = request.params.downloadName + '/' + request.params.fileName;
+    return this.s3.doesDownloadExist(fileName).then(function(fileExists) {
+        if (fileExists === true) {
+            return self.s3.deleteObject(fileName);
+        } else {
+            throw Error('Download does not exist!');
+        }
+    }).then(function() {
+
+        // Return status OK to host
+        reply.continue();
+
+        // Wait until the object has been deleted
+        return self.s3.waitFor('objectNotExists',
+            fileName);
+
+    }).then(function() {
+
+        // Notify other clients via socket.io
+        self.io.emit('refreshDownloadList.' + request.params.downloadName);
+
+    }).catch(function(err) {
+        return reply({
+            message: err.message
+        }).code(400);
+    });
+};
+
 exports.deleteDownload = function(request, reply) {
     var self = this;
 

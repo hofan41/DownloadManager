@@ -15,8 +15,8 @@ $(function() {
         '<button type="button" class="btn btn-default deleteDownloadButton">' +
         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
         '</button>';
-    var deleteButton = '<a href="/api/download/' + fileNameVar +
-        '" role="button" class="btn btn-danger deleteDownloadLink">' +
+    var deleteButton = '<a href="/download/' + fileNameVar +
+        '/api" role="button" class="btn btn-danger deleteDownloadLink">' +
         'Delete</a></div>';
 
     $.fn.dataTable.moment(dateFormat);

@@ -9,6 +9,8 @@ internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64)
     .regex(/^[A-Z0-9 -]+$/i).required();
 internals.joiDescriptionText = Joi.any().label('Description');
 
+internals.joiFileName = Joi.string().label('File Name').required();
+
 internals.s3ObjectName = Joi.string().required();
 internals.s3ObjectType = Joi.string().allow('');
 
@@ -29,7 +31,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/download/{downloadName}/',
+    path: '/download/{downloadName}/api',
     method: 'DELETE',
     handler: Api.deleteDownload,
     config: {
@@ -40,7 +42,18 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/download/{downloadName}/signedPut',
+    path: '/download/{downloadName}/api/list',
+    method: 'GET',
+    handler: Api.fileList,
+    config: {
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName
+            }
+        }
+    }
+}, {
+    path: '/download/{downloadName}/api/signedPut',
     method: 'GET',
     handler: Api.getSignedPutDownloadUrl,
     config: {
@@ -51,6 +64,30 @@ module.exports = [{
             query: {
                 s3ObjectName: internals.s3ObjectName,
                 s3ObjectType: internals.s3ObjectType
+            }
+        }
+    }
+}, {
+    path: '/download/{downloadName}/{fileName}/api',
+    method: 'GET',
+    handler: Api.downloadFile,
+    config: {
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName,
+                fileName: internals.joiFileName
+            }
+        }
+    }
+}, {
+    path: '/download/{downloadName}/{fileName}/api',
+    method: 'DELETE',
+    handler: Api.deleteFile,
+    config: {
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName,
+                fileName: internals.joiFileName
             }
         }
     }
@@ -70,17 +107,6 @@ module.exports = [{
     path: '/api/list',
     method: 'GET',
     handler: Api.downloadsList
-}, {
-    path: '/download/{downloadName}/api/list',
-    method: 'GET',
-    handler: Api.fileList,
-    config: {
-        validate: {
-            params: {
-                downloadName: internals.joiDownloadName
-            }
-        }
-    }
 }, {
     path: '/{param*}',
     method: 'GET',

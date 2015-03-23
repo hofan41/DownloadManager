@@ -123,17 +123,25 @@ exports.deleteObject = internals.deleteObject = function(downloadName) {
 
 exports.getSignedPutObjectUrl = internals.getSignedPutObjectUrl = function(
     downloadName, contentType) {
+    return internals.getSignedUrl('putObject', downloadName, contentType);
+};
 
+exports.getSignedGetObjectUrl = internals.getSignedGetObjectUrl = function(
+    downloadName) {
+    return internals.getSignedUrl('getObject', downloadName);
+};
+
+internals.getSignedUrl = function(operation, downloadName, contentType) {
     return new Promise(function(accept, reject) {
         var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
             Key: downloadName,
-            Expires: 60,
-            ContentType: contentType
+            ContentType: contentType,
+            Expires: 60
         });
 
         // aws-sdk-promise does not work on this function because getSignedUrl 
         // specifies a "synchronous" version that takes in two parameters.
-        internals.s3.getSignedUrl('putObject', s3Params, function(
+        internals.s3.getSignedUrl(operation, s3Params, function(
             err, url) {
             if (err) {
                 reject(err);

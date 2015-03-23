@@ -16,8 +16,8 @@ $(function() {
         '<button type="button" class="btn btn-default deleteDownloadButton">' +
         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
         '</button>';
-    var deleteButton = '<a href="/api/download/' + downloadNameVar +
-        '" role="button" class="btn btn-danger deleteDownloadLink">' +
+    var deleteButton = '<a href="/download/' + downloadNameVar +
+        'api" role="button" class="btn btn-danger deleteDownloadLink">' +
         'Delete</a></div>';
 
     var dataTable = $('#downloadList').DataTable({

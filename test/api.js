@@ -58,10 +58,10 @@ lab.experiment('HTTP Tests', function() {
     });
 
     lab.test(
-        'GET /api/download/test123/signedPut?s3ObjectName=testDownload',
+        'GET /download/test123/api/signedPut?s3ObjectName=testDownload',
         function(done) {
             downloadManager.server.inject({
-                url: '/api/download/test123/signedPut' +
+                url: '/download/test123/api/signedPut' +
                     '?s3ObjectName=testDownload',
                 method: 'GET'
             }, function(res) {
@@ -73,9 +73,9 @@ lab.experiment('HTTP Tests', function() {
             });
         });
 
-    lab.test('DELETE /api/download/test123/', function(done) {
+    lab.test('DELETE /download/test123/api', function(done) {
         downloadManager.server.inject({
-            url: '/api/download/test123/',
+            url: '/download/test123/api',
             method: 'DELETE'
         }, function(res) {
             Code.expect(res.statusCode, 'Status Code').to
