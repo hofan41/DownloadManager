@@ -43,7 +43,8 @@ $(function() {
                 display: function(data) {
                     var fileName = data;
                     return '<a href="/download/' +
-                        fileName + '">' + fileName.split(
+                        fileName + '/api">' +
+                        fileName.split(
                             /(\\|\/)/g).pop() +
                         '</a>';
                 }

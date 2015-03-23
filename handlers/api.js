@@ -86,7 +86,18 @@ exports.getSignedPutDownloadUrl = function(request, reply) {
 };
 
 exports.downloadFile = function(request, reply) {
-    reply.continue();
+    var fileName = request.params.downloadName + '/' + request.params.fileName;
+
+    return this.s3.getSignedGetObjectUrl(fileName).then(function(
+        url) {
+
+        reply.redirect(url);
+
+    }).catch(function(err) {
+        return reply({
+            message: err.message
+        }).code(400);
+    });
 };
 
 exports.deleteFile = function(request, reply) {
