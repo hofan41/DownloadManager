@@ -28,6 +28,7 @@ $(function() {
         columns: [{
             data: null,
             orderable: false,
+            width: '130px',
             render: {
                 display: function(data, type, full) {
                     var downloadName = full.Prefix;

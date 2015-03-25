@@ -28,6 +28,7 @@ $(function() {
         columns: [{
             data: null,
             orderable: false,
+            width: '130px',
             render: {
                 display: function(data, type, full) {
                     var fileName = full.Key;
@@ -51,6 +52,7 @@ $(function() {
             }
         }, {
             data: 'LastModified',
+            width: '270px',
             render: function(data) {
                 return moment(data).format(
                     dateFormat);
