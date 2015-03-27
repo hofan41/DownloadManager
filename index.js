@@ -2,6 +2,7 @@
 
 // Load modules 
 var Hapi = require('hapi');
+var Hoek = require('hoek');
 var BucketActions = require('./handlers/bucketActions');
 
 // Declare internals
@@ -13,17 +14,7 @@ internals.server.connection({
     port: Number(process.env.PORT || 8080)
 });
 
-var io = require('socket.io')(internals.server.listener);
-io.on('connection', function(socket) {
-    socket.on('newFileUploaded', function(downloadName) {
-        var broadcastEvent = 'refreshDownloadList.' +
-            downloadName;
-        io.sockets.emit(broadcastEvent);
-    });
-});
-
 internals.server.bind({
-    io: io,
     s3: BucketActions
 });
 
@@ -41,6 +32,13 @@ internals.server.views({
     layout: true,
     isCached: false,
     context: internals.defaultContext
+});
+
+internals.server.register([
+    require('./plugins/fileNotifications'),
+    require('./plugins/authentication')
+], function(err) {
+    Hoek.assert(!err, 'Failed loading plugin: ' + err);
 });
 
 internals.server.route(require('./routes'));

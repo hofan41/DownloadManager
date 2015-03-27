@@ -1,7 +1,7 @@
 'use strict';
 
 exports.home = function(request, reply) {
-    reply.view('index', {
+    return reply.view('index', {
         jsFiles: ['/js/downloadList.js']
     });
 };
@@ -10,7 +10,7 @@ exports.download = function(request, reply) {
     var downloadName = request.params.downloadName + '/';
     this.s3.headObject(downloadName).then(function(
         s3Response) {
-        reply.view('download', {
+        return reply.view('download', {
             downloadName: request.params.downloadName,
             download: s3Response.data,
             jsFiles: ['/js/s3Upload.js',
@@ -19,7 +19,7 @@ exports.download = function(request, reply) {
             ]
         });
     }).catch(function(err) {
-        reply({
+        return reply({
             message: err.message
         }).code(400);
     });
