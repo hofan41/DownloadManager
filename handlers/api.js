@@ -51,7 +51,7 @@ exports.createNewDownload = function(request, reply) {
         }).then(function() {
 
             // Notify other clients via socket.io
-            self.io.emit('refreshDownloadList');
+            request.server.methods.refreshDownloadList();
 
         }).catch(function(err) {
             return reply({
@@ -122,7 +122,8 @@ exports.deleteFile = function(request, reply) {
     }).then(function() {
 
         // Notify other clients via socket.io
-        self.io.emit('refreshDownloadList.' + request.params.downloadName);
+        request.server.methods.refreshDownloadFileList(request.params
+            .downloadName);
 
     }).catch(function(err) {
         return reply({
@@ -165,7 +166,7 @@ exports.deleteDownload = function(request, reply) {
     }).then(function() {
 
         // Notify other clients via socket.io
-        self.io.emit('refreshDownloadList');
+        request.server.methods.refreshDownloadList();
 
     }).catch(function(err) {
         return reply({

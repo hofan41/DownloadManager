@@ -1,33 +1,33 @@
 {
-    "name": "DownloadManager",
-    "version": "1.0.0",
-    "description": "Webapp that enables management of files to download.",
-    "main": "index.js",
-    "scripts": {
-        "test": "grunt"
-    },
-    "author": "hofan.kang",
-    "license": "ISC",
-    "dependencies": {
-        "aws-sdk": "^2.1.16",
-        "aws-sdk-promise": "0.0.2",
-        "bell": "^2.2.0",
-        "handlebars": "^3.0.0",
-        "hapi": "^8.4.0",
-        "hapi-auth-cookie": "^2.0.0",
-        "hapi-require-https": "^2.0.0",
-        "hoek": "^2.11.1",
-        "joi": "^6.0.6",
-        "promise": "^6.1.0",
-        "socket.io": "^1.3.5"
-    },
-    "devDependencies": {
-        "grunt": "^0.4.5",
-        "grunt-contrib-jshint": "^0.11.0",
-        "grunt-coveralls": "^1.0.0",
-        "grunt-env": "^0.4.4",
-        "grunt-lab": "^2.1.2",
-        "code": "^1.3.0",
-        "lab": "^5.5.0"
-    }
+  "name": "DownloadManager",
+  "version": "1.0.0",
+  "description": "Webapp that enables management of files to download.",
+  "main": "index.js",
+  "scripts": {
+    "test": "grunt"
+  },
+  "author": "hofan.kang",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1.16",
+    "aws-sdk-promise": "0.0.2",
+    "bell": "^2.2.0",
+    "hapi": "^8.4.0",
+    "hapi-auth-cookie": "^2.0.0",
+    "hapi-require-https": "^2.0.0",
+    "hoek": "^2.11.1",
+    "jade": "^1.9.2",
+    "joi": "^6.0.6",
+    "promise": "^6.1.0",
+    "socket.io": "^1.3.5"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-coveralls": "^1.0.0",
+    "grunt-env": "^0.4.4",
+    "grunt-lab": "^2.1.2",
+    "code": "^1.3.0",
+    "lab": "^5.5.0"
+  }
 }

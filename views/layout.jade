@@ -1,0 +1,18 @@
+doctype html
+html(lang='en')  
+    head
+        meta(http-equiv='Content-Type', content='text/html;charset=utf-8')
+        title #{title}
+        link(rel='shortcut icon', type='image/x-icon', href='/images/glyphicons-23-fire.ico')
+        // Layout Specific CSS
+        link(rel='stylesheet', href='/css/layout.css')
+        // Bootstrap
+        link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css')
+        link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css')
+        // DataTables CSS
+        link(rel='stylesheet', type='text/css', href='https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.css')
+    body(style='padding-top: 100px;')
+        include inc/navbar
+        block content
+        include inc/newDownload
+        include inc/scripts

@@ -1,0 +1,22 @@
+// Modal For New Download
+#addNewDownload.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addNewDownloadLabel', aria-hidden='true')
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                h4#addNewDownloadLabel.modal-title New Download
+            .modal-body
+                .alert.alert-danger(role='alert')
+                    span.glyphicon.glyphicon-exclamation-sign(aria-hidden='true')
+                    span.sr-only Error:
+                form
+                    .form-group
+                        label.control-label(for='downloadName') Download Name:
+                        input#downloadName.form-control(type='text', name='downloadName')
+                    .form-group
+                        label.control-label(for='descriptionText') Description:
+                        input#descriptionText.form-control(type='text', name='descriptionText')
+            .modal-footer
+                button.btn.btn-default(type='button', data-dismiss='modal') Close
+                button#addNewDownloadSave.btn.btn-primary(type='button') Save

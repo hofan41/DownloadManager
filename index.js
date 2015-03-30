@@ -24,12 +24,10 @@ internals.defaultContext = {
 
 internals.server.views({
     engines: {
-        hbs: require('handlebars')
+        jade: require('jade')
     },
     relativeTo: __dirname,
     path: './views',
-    layoutPath: './views/layout',
-    layout: true,
     isCached: false,
     context: internals.defaultContext
 });
