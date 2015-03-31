@@ -20,12 +20,10 @@ $(function() {
         'api" role="button" class="btn btn-danger deleteDownloadLink">' +
         'Delete</a></div>';
 
-    var dataTable = $('#downloadList').DataTable({
-        processing: true,
-        serverSide: false,
-        ajax: 'api/list',
-        order: [1, 'asc'],
-        columns: [{
+    var columns = [];
+
+    if (!jQuery.isEmptyObject(internals.profile)) {
+        columns.push({
             data: null,
             orderable: false,
             width: '130px',
@@ -38,18 +36,28 @@ $(function() {
                             downloadName);
                 }
             }
-        }, {
-            data: 'Prefix',
-            render: {
-                display: function(data) {
-                    var downloadName = data.substring(
-                        0, data.length - 1);
-                    return downloadLink.replace(
-                        downloadNameVarRegex,
-                        downloadName);
-                }
+        });
+    }
+
+    columns.push({
+        data: 'Prefix',
+        render: {
+            display: function(data) {
+                var downloadName = data.substring(
+                    0, data.length - 1);
+                return downloadLink.replace(
+                    downloadNameVarRegex,
+                    downloadName);
             }
-        }]
+        }
+    });
+
+    var dataTable = $('#downloadList').DataTable({
+        processing: true,
+        serverSide: false,
+        ajax: 'api/list',
+        order: [columns.length - 1, 'asc'],
+        columns: columns
     });
 
     dataTable.on('draw.dt', function() {
