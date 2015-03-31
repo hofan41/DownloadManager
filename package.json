@@ -12,6 +12,7 @@
     "aws-sdk": "^2.1.16",
     "aws-sdk-promise": "0.0.2",
     "bell": "^2.2.0",
+    "boom": "^2.6.1",
     "hapi": "^8.4.0",
     "hapi-auth-cookie": "^2.0.0",
     "hapi-require-https": "^2.0.0",
