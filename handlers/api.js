@@ -4,11 +4,11 @@ exports.downloadsList = function(request, reply) {
     // listBucket only returns 1000 items. 
     // Need to update this function to retrieve all items > 1000.
     return this.s3.listBucketDirectories().then(function(directories) {
-        reply({
+        return reply({
             data: directories
         });
     }).catch(function(err) {
-        reply({
+        return reply({
             message: err.message
         }).code(400);
     });
@@ -28,7 +28,7 @@ exports.fileList = function(request, reply) {
                 data: files
             });
         }).catch(function(err) {
-        reply({
+        return reply({
             message: err.message
         }).code(400);
     });
@@ -70,7 +70,8 @@ exports.getSignedPutDownloadUrl = function(request, reply) {
         if (downloadExists === true) {
             return self.s3.getSignedPutObjectUrl(downloadName +
                 request.query.s3ObjectName,
-                request.query.s3ObjectType);
+                request.query.s3ObjectType,
+                request.auth.credentials.profile.displayName);
         } else {
             throw new Error('Download does not exist!');
         }

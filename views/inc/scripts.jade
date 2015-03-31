@@ -12,7 +12,9 @@ script(type='text/javascript', charset='utf-8', src='https://cdnjs.cloudflare.co
 script(type='text/javascript', charset='utf-8', src='https://cdn.datatables.net/plug-ins/f2c75b7247b/sorting/datetime-moment.js')
 // Layout Specific Javascript Files
 script(type='text/javascript', charset='utf-8', src='/js/navbar.js')
-script(type='text/javascript', charset='utf-8', src='/js/addNewDownload.js')
+if profile
+    script(type='text/javascript', charset='utf-8', src='/js/addNewDownload.js')
 
-each jsFile in jsFiles
-    script(type='text/javascript', charset='utf-8', src=jsFile)
+if jsFiles
+    each jsFile in jsFiles
+        script(type='text/javascript', charset='utf-8', src=jsFile)

@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    .container
+        .panel.panel-danger
+            .panel-heading
+                h3.panel-title 
+                    span.glyphicon.glyphicon-exclamation-sign(aria-hidden='true')
+                    |  #{code} - #{error}
+            .panel-body
+                p #{message}

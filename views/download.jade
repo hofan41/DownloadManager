@@ -11,22 +11,23 @@ block content
                 else
                     p:i No description provided.
 
-        #accordion.panel-group(role='tablist', aria-multiselectable='true')
-            .panel.panel-success
-                #fileUploadHeading.panel-heading
-                    h3.panel-title
-                        a(data-toggle='collapse', data-parent='#accordion', href='#collapseFileUpload', aria-expanded='false', aria-controls='collapseFileUpload') Upload File
-                #collapseFileUpload.panel-collapse.collapse(role='tabpanel', aria-labelledby='fileUploadHeading')
-                    .panel-body
-                        form.form-inline(action='/download/#{downloadName}/api/signedPut')
-                            .form-group
-                                input#uploadFile(type='file')
-                                p.help-block Select a file to upload for #{downloadName}.
-                            | 
-                            button#uploadFileButton.btn.btn-default(type='submit') Upload
-                        #uploadFileProgress.progress.collapse
-                            .progress-bar(role='progressbar', aria-valuenow='45', aria-valuemin='0', aria-valuemax='100')
-                                span.sr-only 0% Complete
+        if profile
+            #accordion.panel-group(role='tablist', aria-multiselectable='true')
+                .panel.panel-success
+                    #fileUploadHeading.panel-heading
+                        h3.panel-title
+                            a(data-toggle='collapse', data-parent='#accordion', href='#collapseFileUpload', aria-expanded='false', aria-controls='collapseFileUpload') Upload File
+                    #collapseFileUpload.panel-collapse.collapse(role='tabpanel', aria-labelledby='fileUploadHeading')
+                        .panel-body
+                            form.form-inline(action='/download/#{downloadName}/api/signedPut')
+                                .form-group
+                                    input#uploadFile(type='file')
+                                    p.help-block Select a file to upload for #{downloadName}.
+                                | 
+                                button#uploadFileButton.btn.btn-default(type='submit') Upload
+                            #uploadFileProgress.progress.collapse
+                                .progress-bar(role='progressbar', aria-valuenow='45', aria-valuemin='0', aria-valuemax='100')
+                                    span.sr-only 0% Complete
         .panel.panel-default
             .panel-heading
                 h3.panel-title Files
@@ -34,13 +35,13 @@ block content
                 table#downloadFileList.table.table-striped.table-bordered
                     thead
                         tr
-                            th
-                                button.btn.btn-default(type='button', disabled='')
-                                    span.glyphicon.glyphicon-trash(aria-hidden='true')
+                            if profile
+                                th
+                                    button.btn.btn-default(type='button', disabled='')
+                                        span.glyphicon.glyphicon-trash(aria-hidden='true')
                             th Name
                             th Last Modified
 
         // Need to expose downloadName to javascript
         script.
-            var internals = {};
             internals.downloadName = '#{downloadName}';

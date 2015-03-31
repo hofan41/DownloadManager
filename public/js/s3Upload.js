@@ -130,6 +130,12 @@
             if (file.type) {
                 xhr.setRequestHeader('Content-Type', file.type);
             }
+
+            if (internals.profile) {
+                xhr.setRequestHeader('x-amz-meta-author',
+                    internals.profile.displayName);
+            }
+
             return xhr.send(file);
         };
 

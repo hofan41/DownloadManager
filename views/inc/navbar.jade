@@ -17,13 +17,8 @@ nav.navbar.navbar-default.navbar-fixed-top
                     a(href='/') 
                         | Home 
                         span.sr-only (current)
-                li
-                    a(href='#', data-toggle='modal', data-target='#addNewDownload')
-                        | New Download
-            form.navbar-form.navbar-left(role='search')
-                .form-group
-                    input.form-control(type='text', placeholder='Search')
-                | 
-                button.btn.btn-default(type='submit')
-                    | Submit
+                if profile
+                    li
+                        a(href='#', data-toggle='modal', data-target='#addNewDownload')
+                            | New Download
             include navbarUserProfile

@@ -35,6 +35,12 @@ module.exports = [{
     method: 'DELETE',
     handler: Api.deleteDownload,
     config: {
+        app: {
+            isAPI: true
+        },
+        auth: {
+            mode: 'required'
+        },
         validate: {
             params: {
                 downloadName: internals.joiDownloadName
@@ -46,6 +52,9 @@ module.exports = [{
     method: 'GET',
     handler: Api.fileList,
     config: {
+        app: {
+            isAPI: true
+        },
         validate: {
             params: {
                 downloadName: internals.joiDownloadName
@@ -57,6 +66,12 @@ module.exports = [{
     method: 'GET',
     handler: Api.getSignedPutDownloadUrl,
     config: {
+        app: {
+            isAPI: true
+        },
+        auth: {
+            mode: 'required'
+        },
         validate: {
             params: {
                 downloadName: internals.joiDownloadName
@@ -72,6 +87,9 @@ module.exports = [{
     method: 'GET',
     handler: Api.downloadFile,
     config: {
+        auth: {
+            mode: 'required'
+        },
         validate: {
             params: {
                 downloadName: internals.joiDownloadName,
@@ -84,6 +102,12 @@ module.exports = [{
     method: 'DELETE',
     handler: Api.deleteFile,
     config: {
+        app: {
+            isAPI: true
+        },
+        auth: {
+            mode: 'required'
+        },
         validate: {
             params: {
                 downloadName: internals.joiDownloadName,
@@ -96,6 +120,12 @@ module.exports = [{
     method: 'PUT',
     handler: Api.createNewDownload,
     config: {
+        app: {
+            isAPI: true
+        },
+        auth: {
+            mode: 'required'
+        },
         validate: {
             payload: {
                 downloadName: internals.joiDownloadName,
@@ -106,7 +136,12 @@ module.exports = [{
 }, {
     path: '/api/list',
     method: 'GET',
-    handler: Api.downloadsList
+    handler: Api.downloadsList,
+    config: {
+        app: {
+            isAPI: true
+        }
+    }
 }, {
     path: '/{param*}',
     method: 'GET',

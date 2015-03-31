@@ -1,14 +1,20 @@
 ul.nav.navbar-nav.navbar-right
     li.dropdown
-        a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
-            if(profile)
+        if profile
+            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
                 | Welcome, #{profile.displayName}!
-            else
+                span.caret
+            ul.dropdown-menu(role='menu')
+                li
+                    a(href='#') My Profile
+                li.divider
+                li
+                    a(href='/logout') Logout
+        else
+            a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
                 | Welcome, please login!
-            span.caret
-        ul.dropdown-menu(role='menu')
-            li
-                a(href='#') My Profile
-            li.divider
-            li
-                a(href='/logout') Logout
+                span.caret
+            ul.dropdown-menu(role='menu')
+                each provider in supportedProviders
+                    li
+                        a(href='/auth/#{provider}') #{provider} login

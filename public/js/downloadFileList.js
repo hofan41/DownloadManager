@@ -20,12 +20,11 @@ $(function() {
         'Delete</a></div>';
 
     $.fn.dataTable.moment(dateFormat);
-    var dataTable = $('#downloadFileList').DataTable({
-        processing: true,
-        serverSide: false,
-        ajax: 'api/list',
-        order: [2, 'desc'],
-        columns: [{
+
+    var columns = [];
+
+    if (!jQuery.isEmptyObject(internals.profile)) {
+        columns.push({
             data: null,
             orderable: false,
             width: '130px',
@@ -38,26 +37,36 @@ $(function() {
                             fileName);
                 }
             }
-        }, {
-            data: 'Key',
-            render: {
-                display: function(data) {
-                    var fileName = data;
-                    return '<a href="/download/' +
-                        fileName + '/api">' +
-                        fileName.split(
-                            /(\\|\/)/g).pop() +
-                        '</a>';
-                }
+        });
+    }
+
+    columns.push({
+        data: 'Key',
+        render: {
+            display: function(data) {
+                var fileName = data;
+                return '<a href="/download/' +
+                    fileName + '/api">' +
+                    fileName.split(
+                        /(\\|\/)/g).pop() +
+                    '</a>';
             }
-        }, {
-            data: 'LastModified',
-            width: '270px',
-            render: function(data) {
-                return moment(data).format(
-                    dateFormat);
-            }
-        }]
+        }
+    }, {
+        data: 'LastModified',
+        width: '270px',
+        render: function(data) {
+            return moment(data).format(
+                dateFormat);
+        }
+    });
+
+    var dataTable = $('#downloadFileList').DataTable({
+        processing: true,
+        serverSide: false,
+        ajax: 'api/list',
+        order: [columns.length - 1, 'desc'],
+        columns: columns
     });
 
     dataTable.on('draw.dt', function() {

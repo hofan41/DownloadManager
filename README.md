@@ -17,3 +17,4 @@ Env. Variable Name  | Description
 `AWS_ACCESS_KEY_ID` | Self explanatory. Used to access your AWS S3 account.
 `AWS_SECRET_ACCESS_KEY` | Same as above.
 `AWS_S3_BUCKET` | The name of the bucket in S3 the DownloadManager will utilize for uploads/downloads.
+`COOKIE_ENCRYPTION_PASSWORD` | Self explanatory. Cookies are used for session data.

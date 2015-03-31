@@ -64,10 +64,37 @@ exports.register = function(server, options, next) {
     });
 
     server.ext('onPreResponse', function(request, reply) {
+        // Leave API responses alone
+        if (request.route.settings.app.isAPI) {
+            return reply.continue();
+        }
+
         var response = request.response;
-        if (response.variety === 'view' && request.auth.isAuthenticated) {
+
+        if (response.isBoom) {
+            var error = response;
+
+            var context = {
+                supportedProviders: internals.supportedProviders,
+                error: error.output.payload.error,
+                message: error.output.payload.message,
+                code: error.output.statusCode
+            };
+
+            if (request.auth.isAuthenticated) {
+                context.profile = request.auth.credentials.profile;
+            }
+
+            return reply.view('error', context);
+        }
+
+        if (response.variety === 'view') {
             var context = response.source.context || {};
-            context.profile = request.auth.credentials.profile;
+
+            if (request.auth.isAuthenticated) {
+                context.profile = request.auth.credentials.profile;
+            }
+
             context.supportedProviders = internals.supportedProviders;
         }
 
