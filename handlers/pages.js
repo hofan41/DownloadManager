@@ -7,6 +7,8 @@ exports.home = function(request, reply) {
 };
 
 exports.download = function(request, reply) {
+    var self = this;
+
     var downloadName = request.params.downloadName + '/';
     this.s3.headObject(downloadName).then(function(
         s3Response) {
@@ -19,7 +21,7 @@ exports.download = function(request, reply) {
             ]
         });
     }).catch(function(err) {
-        return reply(this.boom.badRequest(downloadName +
-            ' does not exist here!', err));
+        return reply(self.boom.badRequest('Could not find ' +
+            downloadName, err));
     });
 };

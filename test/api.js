@@ -5,29 +5,31 @@ var lab = exports.lab = Lab.script();
 
 var downloadManager = require('../');
 
-lab.experiment('HTTP Tests', function() {
-    lab.test('GET /', function(done) {
+var expect = Code.expect;
+
+lab.experiment('unauthenticated login tests', function() {
+    lab.test('homepage works', function(done) {
         downloadManager.server.inject({
             url: '/',
             method: 'GET'
         }, function(res) {
-            Code.expect(res.statusCode, 'Status Code').to
+            expect(res.statusCode, 'Status Code').to
                 .equal(200);
             done();
         });
     });
 
-    lab.test('GET /download/test123/', function(done) {
+    lab.test('not found page works', function(done) {
         downloadManager.server.inject({
             url: '/download/test123/'
         }, function(res) {
-            Code.expect(res.statusCode, 'Status Code').to
+            expect(res.statusCode, 'Status Code').to
                 .equal(400);
             done();
         });
     });
 
-    lab.test('PUT /api/downloads', function(done) {
+    lab.test('create new download unauthorized', function(done) {
         downloadManager.server.inject({
             url: '/api/downloads',
             method: 'PUT',
@@ -36,53 +38,34 @@ lab.experiment('HTTP Tests', function() {
                 descriptionText: 'lab test!'
             }
         }, function(res) {
-            Code.expect(res.statusCode, 'Status Code').to
-                .equal(200);
-            done();
-        });
-    });
-
-    lab.test('PUT /api/downloads again', function(done) {
-        downloadManager.server.inject({
-            url: '/api/downloads',
-            method: 'PUT',
-            payload: {
-                downloadName: 'test123',
-                descriptionText: 'lab test!'
-            }
-        }, function(res) {
-            Code.expect(res.statusCode, 'Status Code').to
-                .equal(400);
+            expect(res.statusCode, 'Status Code').to
+                .equal(401);
             done();
         });
     });
 
     lab.test(
-        'GET /download/test123/api/signedPut?s3ObjectName=testDownload',
+        'anonymous download file unauthorized',
         function(done) {
             downloadManager.server.inject({
                 url: '/download/test123/api/signedPut' +
                     '?s3ObjectName=testDownload',
                 method: 'GET'
             }, function(res) {
-                Code.expect(res.statusCode, 'Status Code').to
-                    .equal(200);
-                Code.expect(res.result.signedRequest,
-                    'Signed URL').to.be.a.string();
+                expect(res.statusCode, 'Status Code').to
+                    .equal(401);
                 done();
             });
         });
 
-    lab.test('DELETE /download/test123/api', function(done) {
+    lab.test('anonymous delete download unauthorized', function(done) {
         downloadManager.server.inject({
             url: '/download/test123/api',
             method: 'DELETE'
         }, function(res) {
-            Code.expect(res.statusCode, 'Status Code').to
-                .equal(200);
+            expect(res.statusCode, 'Status Code').to
+                .equal(401);
             done();
         });
     });
-
-
 });

@@ -85,7 +85,7 @@ exports.register = function(server, options, next) {
                 context.profile = request.auth.credentials.profile;
             }
 
-            return reply.view('error', context);
+            return reply.view('error', context).code(error.output.statusCode);
         }
 
         if (response.variety === 'view') {
