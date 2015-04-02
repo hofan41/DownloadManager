@@ -1,9 +1,21 @@
-var Config = require('../config');
 var Hoek = require('hoek');
+var Wreck = require('wreck');
+var Joi = require('joi');
 
 var internals = {};
 
+internals.schema = Joi.object({
+    logins: Joi.array().items(Joi.object().keys({
+        provider: Joi.string(),
+        clientId: Joi.string(),
+        clientSecret: Joi.string(),
+        scope: Joi.array().items(Joi.string())
+    }).with('clientId', 'clientSecret')).required()
+});
+
 exports.register = function(server, options, next) {
+    Joi.assert(options, internals.schema);
+
     server.register([
             require('hapi-require-https'),
             require('bell'),
@@ -19,33 +31,31 @@ exports.register = function(server, options, next) {
         });
 
     // Register Third Party Logins
-    internals.providers = Object.keys(Config.login);
     internals.supportedProviders = [];
 
-    internals.providers.forEach(function(provider) {
-        var cred = Config.login[provider];
+    options.logins.forEach(function(login) {
+        if (login.clientId) {
+            internals.supportedProviders.push(login.provider);
 
-        if (cred.clientId) {
-            internals.supportedProviders.push(provider);
-
-            server.auth.strategy(provider, 'bell', {
-                provider: provider,
+            server.auth.strategy(login.provider, 'bell', {
+                provider: login.provider,
                 password: process.env.COOKIE_ENCRYPTION_PASSWORD,
-                clientId: cred.clientId,
-                clientSecret: cred.clientSecret,
-                isSecure: false
+                clientId: login.clientId,
+                clientSecret: login.clientSecret,
+                isSecure: false,
+                scope: login.scope
             });
 
             server.route({
                 method: 'GET',
-                path: '/auth/' + provider,
+                path: '/auth/' + login.provider,
                 config: {
-                    auth: provider,
+                    auth: login.provider,
                     handler: function(request, reply) {
                         if (request.auth.isAuthenticated) {
                             request.auth.session.set(
-                                request.auth
-                                .credentials);
+                                request.auth.credentials
+                            );
                             reply.redirect('/.');
                         }
                     }
@@ -59,7 +69,7 @@ exports.register = function(server, options, next) {
         path: '/logout',
         handler: function(request, reply) {
             request.auth.session.clear();
-            reply.redirect('/.');
+            reply.redirect(request.info.referrer);
         }
     });
 
