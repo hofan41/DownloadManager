@@ -1,7 +1,6 @@
 'use strict';
 
 var Hoek = require('hoek');
-var Wreck = require('wreck');
 var Joi = require('joi');
 var Promise = require('promise');
 var Handlers = require('./handlers');
