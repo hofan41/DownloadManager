@@ -93,20 +93,29 @@ exports.register = function(server, options, next) {
             var result = Joi.validate(accessRights, internals.accessSchema);
             Hoek.assert(!result.error, 'Failed Joi validation: ' + result.error);
             Hoek.assert(request.auth.isAuthenticated === true, 'Should not be updating access rights for anonymous!');
+            var currentAccessRights = {};
 
-            request.auth.credentials.userAccessRights = request.auth.credentials.userAccessRights || {};
+            // Initialize session variable if it doesn't exist.
+            if (!request.auth.credentials.hasOwnProperty('userAccessRights')) {
+                request.auth.session.set('userAccessRights', {});
+            } else {
+                currentAccessRights = Hoek.clone(request.auth.credentials.userAccessRights);
+            }
 
             Object.keys(result.value).forEach(function(accessRight) {
                 // If the new access right grants us new rights
                 if (result.value[accessRight] === true) {
-                    request.auth.credentials.userAccessRights[accessRight] = true;
+                    currentAccessRights[accessRight] = true;
                 }
 
-                // If the new access right is not defined in the current session object
-                else if (!request.auth.credentials.userAccessRights.hasOwnProperty(accessRight)) {
-                    request.auth.credentials.userAccessRights[accessRight] = false;
+                // If the new access right is not defined in the current object
+                else if (!currentAccessRights.hasOwnProperty(accessRight)) {
+                    currentAccessRights[accessRight] = false;
                 }
             });
+
+            // Update session variable.
+            request.auth.session.set('userAccessRights', currentAccessRights);
         }
     }]);
 
