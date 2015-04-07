@@ -9,8 +9,6 @@ exports.onPreResponse = function(request, reply) {
     if (response.isBoom) {
         var error = response;
 
-        console.log(error);
-
         var context = {
             supportedProviders: this.internals.supportedProviders,
             error: error.output.payload.error,
