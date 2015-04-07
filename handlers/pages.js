@@ -9,8 +9,6 @@ exports.home = function(request, reply) {
 };
 
 exports.download = function(request, reply) {
-    var self = this;
-
     var downloadName = request.params.downloadName + '/';
     this.s3.headObject(downloadName).then(function(
         s3Response) {
