@@ -9,34 +9,20 @@ var Handlers = require('./handlers');
 var internals = {};
 
 internals.defaults = {
-    accessRights: {
-        anonymous: {
-            download: false,
-            upload: false,
-            delete: false
-        },
-        authenticated: {
-            download: true,
-            upload: false,
-            delete: false
-        }
-    },
     cookie: {
         isSecure: true
     }
 };
 
-internals.accessSchema = Joi.object({
-    download: Joi.boolean(),
-    upload: Joi.boolean(),
-    delete: Joi.boolean()
-});
+internals.accessSchema = Joi.object().pattern(/.+/, Joi.boolean());
+
+internals.accessRights = Joi.object({
+    anonymous: internals.accessSchema.required(),
+    authenticated: internals.accessSchema.required()
+}).required();
 
 internals.schema = Joi.object({
-    accessRights: Joi.object({
-        anonymous: internals.accessSchema.required(),
-        authenticated: internals.accessSchema.required()
-    }),
+    accessRights: internals.accessRights,
     cookie: Joi.object({
         password: Joi.string().required(),
         isSecure: Joi.boolean()
@@ -92,7 +78,8 @@ exports.register = function(server, options, next) {
         method: function(request, accessRights) {
             var result = Joi.validate(accessRights, internals.accessSchema);
             Hoek.assert(!result.error, 'Failed Joi validation: ' + result.error);
-            Hoek.assert(request.auth.isAuthenticated === true, 'Should not be updating access rights for anonymous!');
+            Hoek.assert(request.auth.isAuthenticated === true,
+                'Should not be updating access rights for anonymous!');
             var currentAccessRights = {};
 
             // Initialize session variable if it doesn't exist.

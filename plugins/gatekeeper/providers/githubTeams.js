@@ -7,11 +7,7 @@ var GithubApi = require('github');
 
 var internals = {};
 
-internals.accessSchema = Joi.object({
-    download: Joi.boolean().required(),
-    upload: Joi.boolean().required(),
-    delete: Joi.boolean().required()
-});
+internals.accessSchema = Joi.object().pattern(/.+/, Joi.boolean());
 
 internals.schema = Joi.object({
     teams: Joi.array().items(Joi.object({
