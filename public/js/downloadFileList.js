@@ -23,7 +23,7 @@ $(function() {
 
     var columns = [];
 
-    if (!jQuery.isEmptyObject(internals.profile)) {
+    if (internals.accessRights.delete) {
         columns.push({
             data: null,
             orderable: false,
@@ -44,12 +44,14 @@ $(function() {
         data: 'Key',
         render: {
             display: function(data) {
-                var fileName = data;
-                return '<a href="/download/' +
-                    fileName + '/api">' +
-                    fileName.split(
-                        /(\\|\/)/g).pop() +
-                    '</a>';
+                var fileName = data.split(/(\\|\/)/g).pop();
+
+                if (internals.accessRights.download) {
+                    return '<a href="/download/' + data + '/api">' +
+                        fileName + '</a>';
+                }
+
+                return fileName;
             }
         }
     }, {

@@ -11,7 +11,7 @@ block content
                 else
                     p:i No description provided.
 
-        if profile
+        if accessRights.upload
             #accordion.panel-group(role='tablist', aria-multiselectable='true')
                 .panel.panel-success
                     #fileUploadHeading.panel-heading
@@ -35,7 +35,7 @@ block content
                 table#downloadFileList.table.table-striped.table-bordered
                     thead
                         tr
-                            if profile
+                            if accessRights.delete
                                 th
                                     button.btn.btn-default(type='button', disabled='')
                                         span.glyphicon.glyphicon-trash(aria-hidden='true')

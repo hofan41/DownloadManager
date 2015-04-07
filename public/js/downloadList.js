@@ -22,7 +22,7 @@ $(function() {
 
     var columns = [];
 
-    if (!jQuery.isEmptyObject(internals.profile)) {
+    if (internals.accessRights.delete) {
         columns.push({
             data: null,
             orderable: false,
