@@ -15,8 +15,7 @@ internals.server.connection({
 });
 
 internals.server.bind({
-    s3: BucketActions,
-    boom: require('boom')
+    s3: BucketActions
 });
 
 internals.defaultContext = {

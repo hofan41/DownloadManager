@@ -1,3 +1,13 @@
+var Boom = require('boom');
+
+exports.onPreHandler = function(request, reply) {
+    if (request.server.methods.doesUserHaveAccess(request)) {
+        reply.continue();
+    } else {
+        reply(Boom.unauthorized('You are not authorized to perform this action!'));
+    }
+}
+
 exports.onPreResponse = function(request, reply) {
     // Leave API responses alone
     if (request.route.settings.app.isAPI) {
@@ -10,7 +20,7 @@ exports.onPreResponse = function(request, reply) {
         var error = response;
 
         var context = {
-            supportedProviders: this.internals.supportedProviders,
+            supportedProviders: this.supportedProviders,
             error: error.output.payload.error,
             message: error.output.payload.message,
             code: error.output.statusCode
@@ -20,7 +30,7 @@ exports.onPreResponse = function(request, reply) {
             context.profile = request.auth.credentials.profile;
         }
 
-        context.accessRights = this.server.methods.getUserAccessRights(request);
+        context.accessRights = request.server.methods.getUserAccessRights(request);
 
         return reply.view('error', context).code(error.output
             .statusCode);
@@ -33,9 +43,9 @@ exports.onPreResponse = function(request, reply) {
             context.profile = request.auth.credentials.profile;
         }
 
-        context.accessRights = this.server.methods.getUserAccessRights(request);
+        context.accessRights = request.server.methods.getUserAccessRights(request);
 
-        context.supportedProviders = this.internals.supportedProviders;
+        context.supportedProviders = this.supportedProviders;
     }
 
     return reply.continue();

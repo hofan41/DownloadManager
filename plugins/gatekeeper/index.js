@@ -4,43 +4,13 @@ var Hoek = require('hoek');
 var Joi = require('joi');
 var Promise = require('promise');
 var Handlers = require('./handlers');
+var JoiSchemas = require('./joiSchemas');
 
 var internals = {};
 
-internals.defaults = {
-    cookie: {
-        isSecure: true
-    }
-};
-
-internals.accessSchema = Joi.object().pattern(/.+/, Joi.boolean());
-
-internals.accessRights = Joi.object({
-    anonymous: internals.accessSchema.required(),
-    authenticated: internals.accessSchema.required()
-}).required();
-
-internals.schema = Joi.object({
-    accessRights: internals.accessRights,
-    cookie: Joi.object({
-        password: Joi.string().required(),
-        isSecure: Joi.boolean()
-    }).required(),
-    logins: Joi.array().items(Joi.object({
-        provider: Joi.string().required(),
-        clientId: Joi.string(),
-        clientSecret: Joi.string(),
-        scope: Joi.array().items(Joi.string()),
-        plugins: Joi.array().items(Joi.object().keys({
-            register: Joi.any(),
-            options: Joi.any()
-        }), Joi.string())
-    }).min(1).and('clientId', 'clientSecret')).required()
-});
-
 exports.register = function(server, options, next) {
 
-    var result = Joi.validate(Hoek.applyToDefaults(internals.defaults, options), internals.schema);
+    var result = Joi.validate(Hoek.applyToDefaults(JoiSchemas.pluginDefaultConfig, options), JoiSchemas.pluginConfig);
 
     Hoek.assert(!result.error, 'Failed Joi validation: ' + result.error);
 
@@ -54,56 +24,17 @@ exports.register = function(server, options, next) {
         function(err) {
             Hoek.assert(!err, 'Failed loading plugin: ' + err);
 
-            server.auth.strategy('session', 'cookie', 'try', {
+            server.auth.strategy('session', 'cookie', 'optional', {
                 password: settings.cookie.password,
                 isSecure: settings.cookie.isSecure
             });
         });
 
-    server.method([{
-        name: 'getUserAccessRights',
-        method: function(request) {
-            if (request.auth.isAuthenticated === true) {
-                return request.auth.credentials.userAccessRights;
-            }
+    server.bind({
+        accessRights: settings.accessRights
+    });
 
-            return this.accessRights.anonymous;
-        },
-        options: {
-            bind: settings
-        }
-    }, {
-        name: 'updateUserAccessRights',
-        method: function(request, accessRights) {
-            var result = Joi.validate(accessRights, internals.accessSchema);
-            Hoek.assert(!result.error, 'Failed Joi validation: ' + result.error);
-            Hoek.assert(request.auth.isAuthenticated === true,
-                'Should not be updating access rights for anonymous!');
-            var currentAccessRights = {};
-
-            // Initialize session variable if it doesn't exist.
-            if (!request.auth.credentials.hasOwnProperty('userAccessRights')) {
-                request.auth.session.set('userAccessRights', {});
-            } else {
-                currentAccessRights = Hoek.clone(request.auth.credentials.userAccessRights);
-            }
-
-            Object.keys(result.value).forEach(function(accessRight) {
-                // If the new access right grants us new rights
-                if (result.value[accessRight] === true) {
-                    currentAccessRights[accessRight] = true;
-                }
-
-                // If the new access right is not defined in the current object
-                else if (!currentAccessRights.hasOwnProperty(accessRight)) {
-                    currentAccessRights[accessRight] = false;
-                }
-            });
-
-            // Update session variable.
-            request.auth.session.set('userAccessRights', currentAccessRights);
-        }
-    }]);
+    server.method(require('./methods'));
 
     server.route({
         method: 'GET',
@@ -112,11 +43,10 @@ exports.register = function(server, options, next) {
     });
 
     server.ext('onPreResponse', Handlers.onPreResponse, {
-        bind: {
-            internals: internals,
-            server: server
-        }
+        bind: internals
     });
+
+    server.ext('onPreHandler', Handlers.onPreHandler);
 
     // Register Third Party Logins
     internals.supportedProviders = [];
@@ -155,7 +85,7 @@ exports.register = function(server, options, next) {
                                 request.auth.credentials
                             );
 
-                            server.methods.updateUserAccessRights(request, settings.accessRights.authenticated);
+                            server.methods.updateUserAccessRights(request, this.accessRights.authenticated);
 
                             if (login.plugins) {
                                 login.plugins.forEach(function(plugin) {

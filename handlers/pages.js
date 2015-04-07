@@ -1,5 +1,7 @@
 'use strict';
 
+var Boom = require('boom');
+
 exports.home = function(request, reply) {
     return reply.view('index', {
         jsFiles: ['/js/downloadList.js']
@@ -21,7 +23,6 @@ exports.download = function(request, reply) {
             ]
         });
     }).catch(function(err) {
-        return reply(self.boom.badRequest('Could not find ' +
-            downloadName, err));
+        return reply(Boom.badRequest('Could not find ' + downloadName, err));
     });
 };

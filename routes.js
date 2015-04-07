@@ -38,8 +38,10 @@ module.exports = [{
         app: {
             isAPI: true
         },
-        auth: {
-            mode: 'required'
+        plugins: {
+            gatekeeper: {
+                delete: true
+            }
         },
         validate: {
             params: {
@@ -69,8 +71,10 @@ module.exports = [{
         app: {
             isAPI: true
         },
-        auth: {
-            mode: 'required'
+        plugins: {
+            gatekeeper: {
+                upload: true
+            }
         },
         validate: {
             params: {
@@ -87,8 +91,10 @@ module.exports = [{
     method: 'GET',
     handler: Api.downloadFile,
     config: {
-        auth: {
-            mode: 'required'
+        plugins: {
+            gatekeeper: {
+                download: true
+            }
         },
         validate: {
             params: {
@@ -105,8 +111,10 @@ module.exports = [{
         app: {
             isAPI: true
         },
-        auth: {
-            mode: 'required'
+        plugins: {
+            gatekeeper: {
+                delete: true
+            }
         },
         validate: {
             params: {
@@ -123,8 +131,10 @@ module.exports = [{
         app: {
             isAPI: true
         },
-        auth: {
-            mode: 'required'
+        plugins: {
+            gatekeeper: {
+                upload: true
+            }
         },
         validate: {
             payload: {
