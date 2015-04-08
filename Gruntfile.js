@@ -39,8 +39,8 @@ module.exports = function(grunt) {
             color: true,
             coverage: true,
             verbose: true,
-//            reporter: 'lcov',
-//            reportFile: 'coverage/lcov.info'
+            reporter: 'lcov',
+            reportFile: 'coverage/lcov.info'
         },
         coveralls: {
             options: {
