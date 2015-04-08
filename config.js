@@ -2,14 +2,14 @@ module.exports = {
     gatekeeper: {
         accessRights: {
             anonymous: {
-                download: process.env.ANONYMOUS_ACCESS_DOWNLOAD || false,
-                upload: process.env.ANONYMOUS_ACCESS_UPLOAD || false,
-                delete: process.env.ANONYMOUS_ACCESS_DELETE || false
+                download: process.env.ANONYMOUS_ACCESS_DOWNLOAD || 'false',
+                upload: process.env.ANONYMOUS_ACCESS_UPLOAD || 'false',
+                delete: process.env.ANONYMOUS_ACCESS_DELETE || 'false'
             },
             authenticated: {
-                download: process.env.AUTHENTICATED_ACCESS_DOWNLOAD || false,
-                upload: process.env.AUTHENTICATED_ACCESS_UPLOAD || false,
-                delete: process.env.AUTHENTICATED_ACCESS_DELETE || false
+                download: process.env.AUTHENTICATED_ACCESS_DOWNLOAD || 'true',
+                upload: process.env.AUTHENTICATED_ACCESS_UPLOAD || 'false',
+                delete: process.env.AUTHENTICATED_ACCESS_DELETE || 'false'
             }
         },
         cookie: {
