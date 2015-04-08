@@ -26,7 +26,8 @@ exports.register = function(server, options, next) {
 
             server.auth.strategy('session', 'cookie', 'optional', {
                 password: settings.cookie.password,
-                isSecure: settings.cookie.isSecure
+                isSecure: settings.cookie.isSecure,
+                ttl: settings.cookie.ttl
             });
         });
 

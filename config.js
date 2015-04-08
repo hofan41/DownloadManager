@@ -14,7 +14,8 @@ module.exports = {
         },
         cookie: {
             password: process.env.COOKIE_ENCRYPTION_PASSWORD,
-            isSecure: process.env.COOKIE_IS_SECURE
+            isSecure: process.env.COOKIE_IS_SECURE || 'true',
+            ttl: process.env.COOKIE_TTL
         },
         logins: [{
             provider: 'facebook',

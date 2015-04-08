@@ -3,9 +3,6 @@
 var Joi = require('joi');
 
 exports.pluginDefaultConfig = {
-    cookie: {
-        isSecure: true
-    }
 };
 
 exports.accessConfig = Joi.object().pattern(/.+/, Joi.boolean());
@@ -19,7 +16,8 @@ exports.pluginConfig = Joi.object({
     accessRights: exports.accessRightsConfig,
     cookie: Joi.object({
         password: Joi.string().required(),
-        isSecure: Joi.boolean()
+        isSecure: Joi.boolean(),
+        ttl: Joi.number().integer().min(1)
     }).required(),
     logins: Joi.array().items(Joi.object({
         provider: Joi.string().required(),
