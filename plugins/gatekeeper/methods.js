@@ -1,3 +1,5 @@
+'use strict';
+
 var Joi = require('joi');
 var Hoek = require('hoek');
 var JoiSchemas = require('./joiSchemas');

@@ -16,7 +16,7 @@ module.exports = function(grunt) {
                 camelcase: true,
                 eqeqeq: true,
                 latedef: true,
-                maxlen: 80,
+                maxlen: 140,
                 newcap: true,
                 quotmark: 'single',
                 strict: true,
@@ -33,17 +33,14 @@ module.exports = function(grunt) {
                     S3Upload: false
                 }
             },
-            files: ['index.js', 'routes.js', 'handlers/**/*.js',
-                'test/**/*.js',
-                'public/**/*.js'
-            ]
+            files: ['index.js', 'routes.js', 'handlers/**/*.js', 'test/**/*.js', 'public/**/*.js', 'plugins/**/*.js']
         },
         lab: {
             color: true,
             coverage: true,
             verbose: true,
-            reporter: 'lcov',
-            reportFile: 'coverage/lcov.info'
+//            reporter: 'lcov',
+//            reportFile: 'coverage/lcov.info'
         },
         coveralls: {
             options: {

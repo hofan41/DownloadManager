@@ -95,9 +95,8 @@ exports.register = function(server, options, next) {
                                         server.plugins[pluginName].hasOwnProperty('onLoginSuccess')) {
 
                                         // Call the plugin login success handler
-                                        loginSuccessCallbacks.push(server.plugins[pluginName][
-                                            'onLoginSuccess'
-                                        ](request));
+                                        loginSuccessCallbacks.push(server.plugins[pluginName].onLoginSuccess(
+                                            request));
                                     }
                                 });
                             }

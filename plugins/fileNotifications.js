@@ -1,3 +1,5 @@
+'use strict';
+
 var internals = {};
 
 internals.refreshDownloadList = function() {

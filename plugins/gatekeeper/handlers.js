@@ -1,3 +1,5 @@
+'use strict';
+
 var Boom = require('boom');
 
 exports.onPreHandler = function(request, reply) {
@@ -6,7 +8,7 @@ exports.onPreHandler = function(request, reply) {
     } else {
         reply(Boom.unauthorized('You are not authorized to perform this action!'));
     }
-}
+};
 
 exports.onPreResponse = function(request, reply) {
     // Leave API responses alone
@@ -16,10 +18,12 @@ exports.onPreResponse = function(request, reply) {
 
     var response = request.response;
 
+    var context = {};
+
     if (response.isBoom) {
         var error = response;
 
-        var context = {
+        context = {
             supportedProviders: this.supportedProviders,
             error: error.output.payload.error,
             message: error.output.payload.message,
@@ -32,12 +36,11 @@ exports.onPreResponse = function(request, reply) {
 
         context.accessRights = request.server.methods.getUserAccessRights(request);
 
-        return reply.view('error', context).code(error.output
-            .statusCode);
+        return reply.view('error', context).code(error.output.statusCode);
     }
 
     if (response.variety === 'view') {
-        var context = response.source.context || {};
+        context = response.source.context || {};
 
         if (request.auth.isAuthenticated) {
             context.profile = request.auth.credentials.profile;

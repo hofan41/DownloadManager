@@ -59,7 +59,7 @@ exports.register.attributes = {
 internals.checkTeamMembership = function(team) {
     var self = this;
 
-    return new Promise(function(accept, reject) {
+    return new Promise(function(accept) {
 
         // First authenticate with the access token.
         internals.github.authenticate({
@@ -71,7 +71,7 @@ internals.checkTeamMembership = function(team) {
         internals.github.orgs.getTeamMember({
             id: team.teamId,
             user: self.profile.username
-        }, function(err, result) {
+        }, function(err) {
             if (err) {
                 team.isInTeam = false;
                 accept(team);
