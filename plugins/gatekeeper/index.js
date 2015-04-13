@@ -54,67 +54,70 @@ exports.register = function(server, options, next) {
 
     // Set up third party login systems using bell.
     settings.logins.forEach(function(login) {
-        if (login.clientId) {
-            internals.supportedProviders.push(login.provider);
-
-            server.auth.strategy(login.provider, 'bell', {
-                provider: login.provider,
-                password: settings.cookie.password,
-                clientId: login.clientId,
-                clientSecret: login.clientSecret,
-                isSecure: settings.cookie.isSecure,
-                scope: login.scope
-            });
-
-            // Register any additional plugins
-            if (login.plugins) {
-                server.register(login.plugins, function(err) {
-                    Hoek.assert(!err, 'Failed loading plugin: ' + err);
-                });
-            }
-
-            server.route({
-                method: 'GET',
-                path: '/auth/' + login.provider,
-                config: {
-                    auth: login.provider,
-                    handler: function(request, reply) {
-                        if (request.auth.isAuthenticated) {
-                            var loginSuccessCallbacks = [];
-
-                            request.auth.session.set(
-                                request.auth.credentials
-                            );
-
-                            server.methods.updateUserAccessRights(request, this.accessRights.authenticated);
-
-                            if (login.plugins) {
-                                login.plugins.forEach(function(plugin) {
-                                    var pluginName = plugin.register.attributes.name;
-
-                                    if (server.plugins.hasOwnProperty(pluginName) &&
-                                        server.plugins[pluginName].hasOwnProperty('onLoginSuccess')) {
-
-                                        // Call the plugin login success handler
-                                        loginSuccessCallbacks.push(server.plugins[pluginName].onLoginSuccess(
-                                            request));
-                                    }
-                                });
-                            }
-
-                            // Wait for all of the login success callbacks to finish
-                            Promise.all(loginSuccessCallbacks).then(function() {
-                                reply.redirect('/.');
-                            });
-                        }
-                    }
-                }
-            });
-        }
+        internals.registerProvider(server, login, settings);
     });
 
     next();
+};
 
+internals.registerProvider = function(server, login, settings) {
+    if (login.clientId) {
+        internals.supportedProviders.push(login.provider);
+
+        server.auth.strategy(login.provider, 'bell', {
+            provider: login.provider,
+            password: settings.cookie.password,
+            clientId: login.clientId,
+            clientSecret: login.clientSecret,
+            isSecure: settings.cookie.isSecure,
+            scope: login.scope
+        });
+
+        // Register any additional plugins
+        if (login.plugins) {
+            server.register(login.plugins, function(err) {
+                Hoek.assert(!err, 'Failed loading plugin: ' + err);
+            });
+        }
+
+        server.route({
+            method: 'GET',
+            path: '/auth/' + login.provider,
+            config: {
+                auth: login.provider,
+                handler: function(request, reply) {
+                    if (request.auth.isAuthenticated) {
+                        var loginSuccessCallbacks = [];
+
+                        request.auth.session.set(
+                            request.auth.credentials
+                        );
+
+                        server.methods.updateUserAccessRights(request, this.accessRights.authenticated);
+
+                        if (login.plugins) {
+                            login.plugins.forEach(function(plugin) {
+                                var pluginName = plugin.register.attributes.name;
+
+                                if (server.plugins.hasOwnProperty(pluginName) &&
+                                    server.plugins[pluginName].hasOwnProperty('onLoginSuccess')) {
+
+                                    // Call the plugin login success handler
+                                    loginSuccessCallbacks.push(server.plugins[pluginName].onLoginSuccess(
+                                        request));
+                                }
+                            });
+                        }
+
+                        // Wait for all of the login success callbacks to finish
+                        Promise.all(loginSuccessCallbacks).then(function() {
+                            reply.redirect('/.');
+                        });
+                    }
+                }
+            }
+        });
+    }
 };
 
 exports.register.attributes = {
