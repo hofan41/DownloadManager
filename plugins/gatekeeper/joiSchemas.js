@@ -2,7 +2,10 @@
 
 var Joi = require('joi');
 
+var internals = {};
+
 exports.pluginDefaultConfig = {
+    cookie: {}
 };
 
 exports.accessConfig = Joi.object().pattern(/.+/, Joi.boolean());
@@ -10,23 +13,19 @@ exports.accessConfig = Joi.object().pattern(/.+/, Joi.boolean());
 exports.accessRightsConfig = Joi.object({
     anonymous: exports.accessConfig.required(),
     authenticated: exports.accessConfig.required()
-}).required();
+});
 
 exports.pluginConfig = Joi.object({
-    accessRights: exports.accessRightsConfig,
-    cookie: Joi.object({
-        password: Joi.string().required(),
-        isSecure: Joi.boolean(),
-        ttl: Joi.number().integer().min(1)
-    }).required(),
+    defaultRights: exports.accessRightsConfig.required(),
+    cookie: Joi.object().unknown(true),
     logins: Joi.array().items(Joi.object({
-        provider: Joi.string().required(),
-        clientId: Joi.string(),
-        clientSecret: Joi.string(),
-        scope: Joi.array().items(Joi.string()),
+        displayName: Joi.string().required(),
+        routeName: Joi.string().required(),
+        bellProvider: Joi.object().and('clientId', 'clientSecret').required(),
         plugins: Joi.array().items(Joi.object().keys({
             register: Joi.any(),
             options: Joi.any()
-        }), Joi.string())
-    }).min(1).and('clientId', 'clientSecret')).required()
+        }), Joi.string()),
+        additionalRights: exports.accessConfig
+    }))
 });

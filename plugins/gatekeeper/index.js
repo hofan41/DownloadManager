@@ -23,16 +23,11 @@ exports.register = function(server, options, next) {
         ],
         function(err) {
             Hoek.assert(!err, 'Failed loading plugin: ' + err);
-
-            server.auth.strategy('session', 'cookie', 'optional', {
-                password: settings.cookie.password,
-                isSecure: settings.cookie.isSecure,
-                ttl: settings.cookie.ttl
-            });
+            server.auth.strategy('session', 'cookie', 'optional', settings.cookie);
         });
 
     server.bind({
-        accessRights: settings.accessRights
+        defaultRights: settings.defaultRights
     });
 
     server.method(require('./methods'));
@@ -61,17 +56,11 @@ exports.register = function(server, options, next) {
 };
 
 internals.registerProvider = function(server, login, settings) {
-    if (login.clientId) {
-        internals.supportedProviders.push(login.provider);
 
-        server.auth.strategy(login.provider, 'bell', {
-            provider: login.provider,
-            password: settings.cookie.password,
-            clientId: login.clientId,
-            clientSecret: login.clientSecret,
-            isSecure: settings.cookie.isSecure,
-            scope: login.scope
-        });
+    if (login.bellProvider.clientId) {
+        internals.supportedProviders.push(login);
+
+        server.auth.strategy(login.routeName, 'bell', login.bellProvider);
 
         // Register any additional plugins
         if (login.plugins) {
@@ -82,35 +71,37 @@ internals.registerProvider = function(server, login, settings) {
 
         server.route({
             method: 'GET',
-            path: '/auth/' + login.provider,
+            path: '/auth/' + login.routeName,
             config: {
-                auth: login.provider,
+                auth: login.routeName,
                 handler: function(request, reply) {
+
                     if (request.auth.isAuthenticated) {
                         var loginSuccessCallbacks = [];
 
-                        request.auth.session.set(
-                            request.auth.credentials
-                        );
+                        request.auth.session.set(request.auth.credentials);
 
-                        server.methods.updateUserAccessRights(request, this.accessRights.authenticated);
+                        var accessRights = Hoek.applyToDefaults(this.defaultRights.authenticated, login.additionalRights);
+
+                        server.methods.updateUserAccessRights(request, accessRights);
 
                         if (login.plugins) {
                             login.plugins.forEach(function(plugin) {
+
                                 var pluginName = plugin.register.attributes.name;
 
                                 if (server.plugins.hasOwnProperty(pluginName) &&
                                     server.plugins[pluginName].hasOwnProperty('onLoginSuccess')) {
 
                                     // Call the plugin login success handler
-                                    loginSuccessCallbacks.push(server.plugins[pluginName].onLoginSuccess(
-                                        request));
+                                    loginSuccessCallbacks.push(server.plugins[pluginName].onLoginSuccess(request));
                                 }
                             });
                         }
 
                         // Wait for all of the login success callbacks to finish
                         Promise.all(loginSuccessCallbacks).then(function() {
+
                             reply.redirect('/.');
                         });
                     }

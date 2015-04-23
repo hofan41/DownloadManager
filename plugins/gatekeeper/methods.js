@@ -12,7 +12,7 @@ module.exports = [{
             return request.auth.credentials.userAccessRights;
         }
 
-        return this.accessRights.anonymous;
+        return this.defaultRights.anonymous;
     }
 }, {
     name: 'updateUserAccessRights',

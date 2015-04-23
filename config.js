@@ -1,6 +1,8 @@
+var isCookieSecure = process.env.COOKIE_IS_SECURE || 'true';
+
 module.exports = {
     gatekeeper: {
-        accessRights: {
+        defaultRights: {
             anonymous: {
                 download: process.env.ANONYMOUS_ACCESS_DOWNLOAD || 'false',
                 upload: process.env.ANONYMOUS_ACCESS_UPLOAD || 'false',
@@ -14,36 +16,57 @@ module.exports = {
         },
         cookie: {
             password: process.env.COOKIE_ENCRYPTION_PASSWORD,
-            isSecure: process.env.COOKIE_IS_SECURE || 'true',
+            isSecure: isCookieSecure,
             ttl: process.env.COOKIE_TTL
         },
         logins: [{
-            provider: 'facebook',
-            clientId: process.env.FACEBOOK_APP_ID,
-            clientSecret: process.env.FACEBOOK_APP_SECRET
+            displayName: 'Facebook',
+            routeName: 'facebook',
+            bellProvider: {
+                provider: 'facebook',
+                password: process.env.COOKIE_ENCRYPTION_PASSWORD,
+                clientId: process.env.FACEBOOK_APP_ID,
+                clientSecret: process.env.FACEBOOK_APP_SECRET,
+                isSecure: isCookieSecure
+            }
         }, {
-            provider: 'google',
-            clientId: process.env.GOOGLE_APP_ID,
-            clientSecret: process.env.GOOGLE_APP_SECRET
+            displayName: 'Google',
+            routeName: 'google',
+            bellProvider: {
+                provider: 'google',
+                password: process.env.COOKIE_ENCRYPTION_PASSWORD,
+                clientId: process.env.GOOGLE_APP_ID,
+                clientSecret: process.env.GOOGLE_APP_SECRET,
+                isSecure: isCookieSecure
+            }
         }, {
-            provider: 'github',
-            clientId: process.env.GITHUB_APP_ID,
-            clientSecret: process.env.GITHUB_APP_SECRET,
-            scope: ['read:org', 'user:email'],
-            plugins: [{
-                register: require(
-                    './plugins/gatekeeper/providers/githubTeams'),
-                options: {
-                    teams: [{
-                        teamId: process.env.GITHUB_TEAM_ID,
-                        accessRights: {
-                            download: process.env.GITHUB_TEAM_ACCESS_DOWNLOAD,
-                            upload: process.env.GITHUB_TEAM_ACCESS_UPLOAD,
-                            delete: process.env.GITHUB_TEAM_ACCESS_DELETE
-                        }
-                    }]
+            displayName: 'Github',
+            routeName: 'github',
+            bellProvider: {
+                provider: 'github',
+                password: process.env.COOKIE_ENCRYPTION_PASSWORD,
+                clientId: process.env.GITHUB_APP_ID,
+                clientSecret: process.env.GITHUB_APP_SECRET,
+                isSecure: isCookieSecure
+            }
+        }, {
+            displayName: process.env.PHAB_DISPLAY_NAME,
+            routeName: 'phabricator',
+            bellProvider: {
+                provider: 'phabricator',
+                password: process.env.COOKIE_ENCRYPTION_PASSWORD,
+                clientId: process.env.PHAB_APP_ID,
+                clientSecret: process.env.PHAB_APP_SECRET,
+                isSecure: isCookieSecure,
+                config: {
+                    uri: process.env.PHAB_APP_URI
                 }
-            }]
+            },
+            additionalRights: {
+                download: 'true',
+                upload: 'true',
+                delete: 'true'
+            }
         }]
     }
 };

@@ -15,4 +15,4 @@ ul.nav.navbar-nav.navbar-right
             ul.dropdown-menu(role='menu')
                 each provider in supportedProviders
                     li
-                        a(href='/auth/#{provider}') #{provider} login
+                        a(href='/auth/#{provider.routeName}') #{provider.displayName} login
