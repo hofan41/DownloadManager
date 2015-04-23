@@ -49,13 +49,13 @@ exports.register = function(server, options, next) {
 
     // Set up third party login systems using bell.
     settings.logins.forEach(function(login) {
-        internals.registerProvider(server, login, settings);
+        internals.registerProvider(server, login);
     });
 
     next();
 };
 
-internals.registerProvider = function(server, login, settings) {
+internals.registerProvider = function(server, login) {
 
     if (login.bellProvider.clientId) {
         internals.supportedProviders.push(login);

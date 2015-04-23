@@ -21,7 +21,8 @@ lab.experiment('unauthenticated login tests', function() {
 
     lab.test('not found page works', function(done) {
         downloadManager.server.inject({
-            url: '/download/test123/'
+            url: '/download/test123/',
+            method: 'GET'
         }, function(res) {
             expect(res.statusCode, 'Status Code').to
                 .equal(400);

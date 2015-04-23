@@ -2,8 +2,6 @@
 
 var Joi = require('joi');
 
-var internals = {};
-
 exports.pluginDefaultConfig = {
     cookie: {}
 };
