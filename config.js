@@ -50,7 +50,7 @@ module.exports = {
                 isSecure: isCookieSecure
             }
         }, {
-            displayName: process.env.PHAB_DISPLAY_NAME,
+            displayName: process.env.PHAB_DISPLAY_NAME || 'Phabricator',
             routeName: 'phabricator',
             bellProvider: {
                 provider: 'phabricator',
