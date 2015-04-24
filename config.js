@@ -27,7 +27,8 @@ module.exports = {
                 password: process.env.COOKIE_ENCRYPTION_PASSWORD,
                 clientId: process.env.FACEBOOK_APP_ID,
                 clientSecret: process.env.FACEBOOK_APP_SECRET,
-                isSecure: isCookieSecure
+                isSecure: isCookieSecure,
+                forceHttps: isCookieSecure
             }
         }, {
             displayName: 'Google',
@@ -37,7 +38,8 @@ module.exports = {
                 password: process.env.COOKIE_ENCRYPTION_PASSWORD,
                 clientId: process.env.GOOGLE_APP_ID,
                 clientSecret: process.env.GOOGLE_APP_SECRET,
-                isSecure: isCookieSecure
+                isSecure: isCookieSecure,
+                forceHttps: isCookieSecure
             }
         }, {
             displayName: 'Github',
@@ -47,7 +49,8 @@ module.exports = {
                 password: process.env.COOKIE_ENCRYPTION_PASSWORD,
                 clientId: process.env.GITHUB_APP_ID,
                 clientSecret: process.env.GITHUB_APP_SECRET,
-                isSecure: isCookieSecure
+                isSecure: isCookieSecure,
+                forceHttps: isCookieSecure
             }
         }, {
             displayName: process.env.PHAB_DISPLAY_NAME || 'Phabricator',
@@ -58,6 +61,7 @@ module.exports = {
                 clientId: process.env.PHAB_APP_ID,
                 clientSecret: process.env.PHAB_APP_SECRET,
                 isSecure: isCookieSecure,
+                forceHttps: isCookieSecure,
                 config: {
                     uri: process.env.PHAB_APP_URI
                 }
