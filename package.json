@@ -11,6 +11,7 @@
   "dependencies": {
     "aws-sdk": "2.x.x",
     "aws-sdk-promise": "0.x.x",
+    "bell": "2.x.x",
     "github": "0.x.x",
     "hapi-auth-cookie": "2.x.x",
     "boom": "2.x.x",
