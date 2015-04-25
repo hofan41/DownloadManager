@@ -58,9 +58,12 @@ $(function() {
         data: 'LastModified',
         width: '270px',
         render: function(data) {
-            return moment(data).format(
+            return moment(new Date(data)).format(
                 dateFormat);
         }
+    }, {
+        data: 'Metadata.author',
+        width: '135px'
     });
 
     var dataTable = $('#downloadFileList').DataTable({

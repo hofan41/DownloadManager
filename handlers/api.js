@@ -1,5 +1,7 @@
 'use strict';
 
+var Hoek = require('hoek');
+
 exports.downloadsList = function(request, reply) {
     // listBucket only returns 1000 items. 
     // Need to update this function to retrieve all items > 1000.
@@ -15,23 +17,39 @@ exports.downloadsList = function(request, reply) {
 };
 
 exports.fileList = function(request, reply) {
+    var self = this;
+
     var downloadName = request.params.downloadName + '/';
     return this.s3.listFiles(downloadName).then(
-        function(files) {
-            for (var i = 0; i < files.length; ++i) {
-                if (files[i].Key === downloadName) {
-                    files.splice(i, 1);
-                    break;
+            function(files) {
+                // Remove the folder name itself from the file list.
+                for (var i = 0; i < files.length; ++i) {
+                    if (files[i].Key === downloadName) {
+                        files.splice(i, 1);
+                        break;
+                    }
                 }
-            }
-            reply({
-                data: files
+
+                return Promise.all(files.map(function(currentValue) {
+                    return currentValue.Key;
+                }).map(self.s3.headObject));
+            })
+        .then(function(results) {
+
+            var replyData = results.map(function(currentValue) {
+                return Hoek.applyToDefaults(currentValue.data, {
+                    Key: currentValue.request.params.Key
+                });
+            });
+
+            return reply({
+                data: replyData
             });
         }).catch(function(err) {
-        return reply({
-            message: err.message
-        }).code(400);
-    });
+            return reply({
+                message: err.message
+            }).code(400);
+        });
 };
 
 exports.createNewDownload = function(request, reply) {
