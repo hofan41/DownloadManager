@@ -1,6 +1,7 @@
 'use strict';
 
 var Hoek = require('hoek');
+var Promise = require('promise');
 
 exports.downloadsList = function(request, reply) {
     // listBucket only returns 1000 items. 
