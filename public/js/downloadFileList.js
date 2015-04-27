@@ -61,7 +61,11 @@ $(function() {
             return moment(new Date(data)).format(
                 dateFormat);
         }
-    }, {
+    });
+
+    var lastModifiedIndex = columns.length - 1;
+
+    columns.push({
         data: 'Metadata.author',
         width: '135px'
     });
@@ -70,7 +74,7 @@ $(function() {
         processing: true,
         serverSide: false,
         ajax: 'api/list',
-        order: [columns.length - 1, 'desc'],
+        order: [lastModifiedIndex, 'desc'],
         columns: columns
     });
 
