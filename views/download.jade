@@ -6,11 +6,7 @@ block content
             .panel-heading
                 h3.panel-title #{downloadName}
             .panel-body
-                if download.Metadata.description
-                    p #{download.Metadata.description}
-                else
-                    p:i No description provided.
-
+                #readme Loading...
         if accessRights.upload
             #accordion.panel-group(role='tablist', aria-multiselectable='true')
                 .panel.panel-success
@@ -46,3 +42,4 @@ block content
         // Need to expose downloadName to javascript
         script.
             internals.downloadName = '#{downloadName}';
+            internals.readmeUrl = '#{readme}';

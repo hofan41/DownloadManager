@@ -1,5 +1,4 @@
 /*
- * jQuery Datatables
  * Displays the files available inside a specific top level directory.
  *
  */
@@ -7,6 +6,21 @@
 'use strict';
 
 $(function() {
+    // Initialize README.md
+    $.ajax({
+        type: 'GET',
+        cache: false,
+        url: internals.readmeUrl
+    }).done(function(readmeData) {
+        document.getElementById('readme').innerHTML =
+            marked(readmeData);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        document.getElementById('readme').innerHTML =
+            marked('Failed to retrieve README.md\n\n```\n' + textStatus + '\n' + JSON.stringify(errorThrown) + '\n```');
+    });
+
+
+    // Initialize Datatables
     var dateFormat = 'LLL';
     var fileNameVar = '{fileName}';
     var fileNameVarRegex = new RegExp(fileNameVar, 'g');
