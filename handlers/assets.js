@@ -5,3 +5,9 @@ exports.servePublicDirectory = {
         path: 'public'
     }
 };
+
+exports.serveBowerComponents = {
+    directory: {
+        path: 'bower_components'
+    }
+};
