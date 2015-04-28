@@ -35,8 +35,7 @@ lab.experiment('unauthenticated login tests', function() {
             url: '/api/downloads',
             method: 'PUT',
             payload: {
-                downloadName: 'test123',
-                descriptionText: 'lab test!'
+                downloadName: 'test123'
             }
         }, function(res) {
             expect(res.statusCode, 'Status Code').to

@@ -30,7 +30,8 @@ module.exports = function(grunt) {
                     it: false,
                     describe: false,
                     internals: true,
-                    S3Upload: false
+                    S3Upload: false,
+                    marked: false
                 }
             },
             files: ['index.js', 'routes.js', 'handlers/**/*.js', 'test/**/*.js', 'public/**/*.js', 'plugins/**/*.js']
