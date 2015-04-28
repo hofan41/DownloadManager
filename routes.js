@@ -7,7 +7,6 @@ var internals = {};
 
 internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64)
     .regex(/^[A-Z0-9 -]+$/i).required();
-internals.joiDescriptionText = Joi.any().label('Description');
 
 internals.joiFileName = Joi.string().label('File Name').required();
 
@@ -138,8 +137,7 @@ module.exports = [{
         },
         validate: {
             payload: {
-                downloadName: internals.joiDownloadName,
-                descriptionText: internals.joiDescriptionText
+                downloadName: internals.joiDownloadName
             }
         }
     }
@@ -152,6 +150,10 @@ module.exports = [{
             isAPI: true
         }
     }
+}, {
+    path: '/bower/{param*}',
+    method: 'GET',
+    handler: Assets.serveBowerComponents
 }, {
     path: '/{param*}',
     method: 'GET',

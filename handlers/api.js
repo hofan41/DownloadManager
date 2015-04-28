@@ -38,9 +38,17 @@ exports.fileList = function(request, reply) {
         .then(function(results) {
 
             var replyData = results.map(function(currentValue) {
-                return Hoek.applyToDefaults(currentValue.data, {
+                var data = Hoek.applyToDefaults(currentValue.data, {
                     Key: currentValue.request.params.Key
                 });
+
+                data.Metadata = data.Metadata || {};
+
+                if (!('author' in data.Metadata)) {
+                    data.Metadata.author = '';
+                }
+
+                return data;
             });
 
             return reply({
@@ -58,7 +66,7 @@ exports.createNewDownload = function(request, reply) {
 
     var downloadName = request.payload.downloadName + '/';
 
-    return this.s3.createDownload(downloadName, request.payload.descriptionText)
+    return this.s3.createDownload(downloadName)
         .then(function() {
 
             // Return status OK to host

@@ -25,15 +25,13 @@ exports.validateSettings = internals.validateSettings = function() {
     return internals.s3.headBucket(internals.defaultS3Params).promise();
 };
 
-exports.createDownload = internals.createDownload = function(downloadName,
-    descriptionText) {
+exports.createDownload = internals.createDownload = function(downloadName) {
     return internals.doesDownloadExist(downloadName).then(function(
         downloadExists) {
         if (downloadExists === true) {
             internals.downloadNameAlreadyExistsError();
         } else {
-            return internals.putObject(downloadName,
-                descriptionText);
+            return internals.putObject(downloadName);
         }
     });
 };
@@ -56,13 +54,9 @@ exports.doesDownloadExist = internals.doesDownloadExist = function(
             });
 };
 
-exports.putObject = internals.putObject = function(downloadName,
-    descriptionText) {
+exports.putObject = internals.putObject = function(downloadName) {
     var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-        Key: downloadName,
-        Metadata: {
-            Description: descriptionText
-        }
+        Key: downloadName
     });
 
     return internals.s3.putObject(s3Params).promise();
