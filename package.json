@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "grunt",
-    "postinstall": "bower install"
+    "postinstall": "node ./node_modules/bower/bin/bower install"
   },
   "author": "hofan.kang",
   "license": "ISC",
@@ -13,10 +13,11 @@
     "aws-sdk": "2.x.x",
     "aws-sdk-promise": "0.x.x",
     "bell": "2.x.x",
-    "github": "0.x.x",
-    "hapi-auth-cookie": "2.x.x",
     "boom": "2.x.x",
+    "bower": "^1.4.1",
+    "github": "0.x.x",
     "hapi": "8.x.x",
+    "hapi-auth-cookie": "2.x.x",
     "hapi-require-https": "2.x.x",
     "hoek": "2.x.x",
     "jade": "1.x.x",
