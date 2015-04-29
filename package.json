@@ -4,7 +4,8 @@
   "description": "Webapp that enables management of files to download.",
   "main": "index.js",
   "scripts": {
-    "test": "grunt"
+    "test": "grunt",
+    "postinstall": "bower install"
   },
   "author": "hofan.kang",
   "license": "ISC",
