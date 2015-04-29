@@ -68,9 +68,17 @@ module.exports = {
             },
             additionalRights: {
                 download: 'true',
-                upload: 'true',
-                delete: 'true'
-            }
+                upload: 'true'
+            },
+            plugins: [{
+                register: require('./plugins/gatekeeper/providers/phabricatorRoles'),
+                options: [{
+                    roleName: 'admin',
+                    accessRights: {
+                        delete: 'true'
+                    }
+                }]
+            }]
         }]
     }
 };
