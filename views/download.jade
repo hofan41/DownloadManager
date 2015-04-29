@@ -2,11 +2,6 @@ extends layout
 
 block content
     .container
-        .panel.panel-default
-            .panel-heading
-                h3.panel-title #{downloadName}
-            .panel-body
-                #readme Loading...
         if accessRights.upload
             #accordion.panel-group(role='tablist', aria-multiselectable='true')
                 .panel.panel-success
@@ -38,7 +33,9 @@ block content
                             th Name
                             th Last Modified
                             th Author
-
+        .panel.panel-default
+            .panel-body
+                #readme.markdown-body Loading...
         // Need to expose downloadName to javascript
         script.
             internals.downloadName = '#{downloadName}';
