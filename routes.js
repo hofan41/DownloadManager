@@ -10,7 +10,7 @@ internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64)
 
 internals.joiFileName = Joi.string().label('File Name').required();
 
-internals.s3ObjectName = Joi.string().required();
+internals.s3ObjectName = Joi.string().not('README.md').required();
 internals.s3ObjectType = Joi.string().allow('');
 
 internals.markdownContent = Joi.string().allow('');
