@@ -24,6 +24,7 @@
     "datatables": "~1.10.6",
     "moment": "~2.10.2",
     "bootstrap": "~3.3.4",
-    "github-markdown-css": "~2.0.8"
+    "github-markdown-css": "~2.0.8",
+    "bootstrap-markdown": "~2.9.0"
   }
 }
