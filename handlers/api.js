@@ -48,15 +48,15 @@ exports.fileList = function(request, reply) {
     var downloadName = request.params.downloadName + '/';
     return this.s3.listFiles(downloadName).then(
             function(files) {
+                var prunedFiles = [];
                 // Remove the folder name itself from the file list.
                 for (var i = 0; i < files.length; ++i) {
-                    if (files[i].Key === downloadName) {
-                        files.splice(i, 1);
-                        break;
+                    if (files[i].Key !== downloadName && files[i].Key !== downloadName + 'README.md') {
+                        prunedFiles.push(files[i]);
                     }
                 }
 
-                return Promise.all(files.map(function(currentValue) {
+                return Promise.all(prunedFiles.map(function(currentValue) {
                     return currentValue.Key;
                 }).map(self.s3.headObject));
             })
