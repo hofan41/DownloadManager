@@ -1,5 +1,6 @@
 'use strict';
 
+/* exported initializeMarkdownEditModal */
 var initializeMarkdownEditModal = function(modalId, markdownEventName, ajaxOptions) {
 
     var editMarkdownModal = $(modalId);

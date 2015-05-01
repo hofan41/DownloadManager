@@ -12,6 +12,7 @@ $(function() {
         url: 'api/README.md'
     };
 
+    /* global initializeMarkdownEditModal: true */
     initializeMarkdownEditModal('#editReadme', 'editReadmeUpdated', readmeEditOptions);
 
     $('#editReadmeTextArea').markdown({

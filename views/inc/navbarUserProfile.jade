@@ -2,7 +2,7 @@ ul.nav.navbar-nav.navbar-right
     li.dropdown
         if profile
             a.dropdown-toggle(href='#', data-toggle='dropdown', role='button', aria-expanded='false')
-                | Welcome, #{profile.username}!
+                | Welcome, #{profile.displayName}!
                 span.caret
             ul.dropdown-menu(role='menu')
                 li.divider
