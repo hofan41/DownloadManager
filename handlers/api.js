@@ -4,7 +4,28 @@ var Hoek = require('hoek');
 var Promise = require('promise');
 
 exports.updateReadme = function(request, reply) {
-    return reply().code(200);
+    var self = this;
+    var objectName = request.params.downloadName + '/README.md';
+
+    return this.s3.putTextObject(objectName, 'public-read', request.payload.content, request.auth.credentials.profile.displayName)
+        .then(function() {
+
+            // Return status OK to host
+            reply.continue();
+
+            // Wait for the object to be added
+            return self.s3.waitFor('objectExists', objectName);
+
+        }).then(function() {
+
+            // Notify other clients via socket.io
+            request.server.methods.refreshReadmeFile(request.params.downloadName, request.payload.content);
+
+        }).catch(function(err) {
+            return reply({
+                message: err.message
+            }).code(400);
+        });
 };
 
 exports.downloadsList = function(request, reply) {

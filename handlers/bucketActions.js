@@ -62,6 +62,19 @@ exports.putEmptyObject = internals.putEmptyObject = function(objectName) {
     return internals.s3.putObject(s3Params).promise();
 };
 
+exports.putTextObject = internals.putTextObject = function(objectName, acl, data, author) {
+    var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
+        Key: objectName,
+        ACL: acl,
+        Body: data,
+        Metadata: {
+            Author: author
+        }
+    });
+
+    return internals.s3.putObject(s3Params).promise();
+};
+
 exports.waitFor = internals.waitFor = function(event, downloadName) {
     var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
         Key: downloadName

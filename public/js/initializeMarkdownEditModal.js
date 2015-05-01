@@ -27,9 +27,9 @@ var initializeMarkdownEditModal = function(modalId, markdownEventName, ajaxOptio
 
         editMarkdownButton.prop('disabled', true);
 
-        if (ajaxOptions.data === undefined) {
-            ajaxOptions.data = editMarkdownForm.serialize()
-        }
+        ajaxOptions.data = {
+            content: editMarkdownTextArea.val()
+        };
 
         $.ajax(ajaxOptions)
             .done(function() {

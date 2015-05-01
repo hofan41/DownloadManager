@@ -21,18 +21,20 @@ $(function() {
     });
 
     // Initialize README.md
+    var loadReadmeFile = function(data) {
+        document.getElementById('readme').innerHTML = marked(data);
+    };
+
     $.ajax({
         type: 'GET',
         cache: false,
         url: internals.readmeUrl
     }).done(function(readmeData) {
-        document.getElementById('readme').innerHTML = marked(readmeData);
+        loadReadmeFile(readmeData);
         $(document).trigger('editReadmeUpdated', readmeData);
     }).fail(function(jqXHR, textStatus, errorThrown) {
-        document.getElementById('readme').innerHTML =
-            marked('Failed to retrieve README.md\n\n```\n' + textStatus + '\n' + JSON.stringify(errorThrown) + '\n```');
+        loadReadmeFile('Failed to retrieve README.md\n\n```\n' + textStatus + '\n' + JSON.stringify(errorThrown) + '\n```');
     });
-
 
     // Initialize Datatables
     var dateFormat = 'LLL';
@@ -114,6 +116,10 @@ $(function() {
     var refreshEvent = 'refreshDownloadList.' + internals.downloadName;
     socket.on(refreshEvent, function() {
         dataTable.ajax.reload(null, false);
+    });
+    var readmeRefreshEvent = 'refreshReadmeFile.' + internals.downloadName;
+    socket.on(readmeRefreshEvent, function(data) {
+        loadReadmeFile(data.readmeData);
     });
 
     // Anytime the user clicks on a trashcan button, the delete link next

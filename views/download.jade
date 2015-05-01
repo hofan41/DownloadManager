@@ -33,11 +33,13 @@ block content
                             th Name
                             th Last Modified
                             th Author
+        .clearfix
+            .btn-group.pull-right(role='group')
+                button.btn.btn-disabled(type='button') README.md
+                if accessRights.upload
+                    button.btn.btn-default(type='button', data-toggle='modal', data-target='#editReadme') edit
         .panel.panel-default
             .panel-body
-                .btn-group.pull-right(role='group')
-                    button.btn.btn-disabled(type='button') README.md
-                    button.btn.btn-default(type='button', data-toggle='modal', data-target='#editReadme') edit
                 #readme.markdown-body Loading...
         include inc/editReadme
         // Need to expose downloadName to javascript

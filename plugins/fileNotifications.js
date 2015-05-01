@@ -2,6 +2,12 @@
 
 var internals = {};
 
+internals.refreshReadmeFile = function(downloadName, data) {
+    this.emit('refreshReadmeFile.' + downloadName, {
+        readmeData: data
+    });
+};
+
 internals.refreshDownloadList = function() {
     this.emit('refreshDownloadList');
 };
@@ -26,12 +32,17 @@ exports.register = function(server, options, next) {
         options: {
             bind: internals.io
         }
+    }, {
+        name: 'refreshReadmeFile',
+        method: internals.refreshReadmeFile,
+        options: {
+            bind: internals.io
+        }
     }]);
 
     internals.io.on('connection', function(socket) {
         socket.on('newFileUploaded', function(downloadName) {
-            server.methods.refreshDownloadFileList(
-                downloadName);
+            server.methods.refreshDownloadFileList(downloadName);
         });
     });
 
