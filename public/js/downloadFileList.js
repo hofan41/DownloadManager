@@ -6,14 +6,28 @@
 'use strict';
 
 $(function() {
+    // Initialize Markdown Edit Modal
+    var readmeEditOptions = {
+        type: 'PUT',
+        url: 'api/README.md'
+    };
+
+    initializeMarkdownEditModal('#editReadme', 'editReadmeUpdated', readmeEditOptions);
+
+    $('#editReadmeTextArea').markdown({
+        onPreview: function(e) {
+            e.$textarea.parent().addClass('markdown-body');
+        }
+    });
+
     // Initialize README.md
     $.ajax({
         type: 'GET',
         cache: false,
         url: internals.readmeUrl
     }).done(function(readmeData) {
-        document.getElementById('readme').innerHTML =
-            marked(readmeData);
+        document.getElementById('readme').innerHTML = marked(readmeData);
+        $(document).trigger('editReadmeUpdated', readmeData);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         document.getElementById('readme').innerHTML =
             marked('Failed to retrieve README.md\n\n```\n' + textStatus + '\n' + JSON.stringify(errorThrown) + '\n```');

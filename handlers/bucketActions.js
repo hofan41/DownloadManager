@@ -31,7 +31,7 @@ exports.createDownload = internals.createDownload = function(downloadName) {
         if (downloadExists === true) {
             internals.downloadNameAlreadyExistsError();
         } else {
-            return internals.putObject(downloadName);
+            return internals.putEmptyObject(downloadName);
         }
     });
 };
@@ -54,9 +54,9 @@ exports.doesDownloadExist = internals.doesDownloadExist = function(
             });
 };
 
-exports.putObject = internals.putObject = function(downloadName) {
+exports.putEmptyObject = internals.putEmptyObject = function(objectName) {
     var s3Params = Hoek.applyToDefaults(internals.defaultS3Params, {
-        Key: downloadName
+        Key: objectName
     });
 
     return internals.s3.putObject(s3Params).promise();

@@ -3,6 +3,10 @@
 var Hoek = require('hoek');
 var Promise = require('promise');
 
+exports.updateReadme = function(request, reply) {
+    return reply().code(200);
+};
+
 exports.downloadsList = function(request, reply) {
     // listBucket only returns 1000 items. 
     // Need to update this function to retrieve all items > 1000.

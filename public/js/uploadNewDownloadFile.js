@@ -8,33 +8,39 @@ var uploadNewDownloadFile = function(getPutUrl, fileDomSelector, progressDiv,
         return callback();
     }
 
-    var progressSelector = $('#' + progressDiv);
-    progressSelector.removeClass('collapse');
-    var progressBarSelector = progressSelector.find('.progress-bar');
+    if (progressDiv) {
+        var progressSelector = $('#' + progressDiv);
+        progressSelector.removeClass('collapse');
+        var progressBarSelector = progressSelector.find('.progress-bar');
 
-    // Clear all stylings on the progress bar.
-    progressBarSelector.removeClass();
+        // Clear all stylings on the progress bar.
+        progressBarSelector.removeClass();
 
-    // Set it to be active and begin upload.
-    progressBarSelector.addClass('progress-bar progress-bar-striped active');
-    progressBarSelector.width(0);
+        // Set it to be active and begin upload.
+        progressBarSelector.addClass('progress-bar progress-bar-striped active');
+        progressBarSelector.width(0);
+    }
 
     new S3Upload({
         fileDomSelector: fileDomSelector,
         s3SignPutUrl: getPutUrl,
         onProgress: function(percent) {
-            progressBarSelector.width(percent + '%');
+            if (progressDiv) {
+                progressBarSelector.width(percent + '%');
+            }
         },
         onFinishS3Put: function() {
-            progressBarSelector.removeClass();
-            progressBarSelector.addClass(
-                'progress-bar progress-bar-success');
+            if (progressDiv) {
+                progressBarSelector.removeClass();
+                progressBarSelector.addClass('progress-bar progress-bar-success');
+            }
             callback();
         },
         onError: function(status) {
-            progressBarSelector.removeClass();
-            progressBarSelector.addClass(
-                'progress-bar progress-bar-danger');
+            if (progressDiv) {
+                progressBarSelector.removeClass();
+                progressBarSelector.addClass('progress-bar progress-bar-danger');
+            }
             callback({
                 message: status
             });

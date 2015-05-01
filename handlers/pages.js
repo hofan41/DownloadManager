@@ -18,6 +18,7 @@ exports.download = function(request, reply) {
             readme: 'https://virtium-dlm.s3.amazonaws.com/' + downloadName + 'README.md',
             jsFiles: ['/js/s3Upload.js',
                 '/js/uploadNewDownloadFile.js',
+                '/js/initializeMarkdownEditModal.js',
                 '/js/downloadFileList.js'
             ]
         });

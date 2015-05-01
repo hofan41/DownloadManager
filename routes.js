@@ -13,6 +13,8 @@ internals.joiFileName = Joi.string().label('File Name').required();
 internals.s3ObjectName = Joi.string().required();
 internals.s3ObjectType = Joi.string().allow('');
 
+internals.markdownContent = Joi.string().allow('');
+
 // Server Endpoints
 module.exports = [{
     path: '/',
@@ -45,6 +47,28 @@ module.exports = [{
         validate: {
             params: {
                 downloadName: internals.joiDownloadName
+            }
+        }
+    }
+}, {
+    path: '/download/{downloadName}/api/README.md',
+    method: 'PUT',
+    handler: Api.updateReadme,
+    config: {
+        app: {
+            isAPI: true
+        },
+        plugins: {
+            gatekeeper: {
+                upload: true
+            }
+        },
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName
+            },
+            payload: {
+                content: internals.markdownContent.required()
             }
         }
     }

@@ -1,0 +1,18 @@
+// Modal For New Download
+#editReadme.modal.fade(tabindex='-1', role='dialog', aria-labelledby='editReadmeLabel', aria-hidden='true')
+    .modal-dialog.modal-lg
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                h4#editReadmeLabel.modal-title Edit README.md
+            .modal-body
+                .alert.alert-danger(role='alert')
+                    span.glyphicon.glyphicon-exclamation-sign(aria-hidden='true')
+                    span.sr-only Error:
+                form
+                    .form-group
+                        textarea#editReadmeTextArea.form-control(type='text', name='content', rows='20')
+            .modal-footer
+                button.btn.btn-default(type='button', data-dismiss='modal') Close
+                button#editMarkdownSave.btn.btn-primary(type='button') Save
