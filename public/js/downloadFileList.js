@@ -24,6 +24,7 @@ $(function() {
     // Initialize README.md
     var loadReadmeFile = function(data) {
         document.getElementById('readme').innerHTML = marked(data);
+        $(document).trigger('editReadmeUpdated', data);
     };
 
     $.ajax({
@@ -32,7 +33,6 @@ $(function() {
         url: internals.readmeUrl
     }).done(function(readmeData) {
         loadReadmeFile(readmeData);
-        $(document).trigger('editReadmeUpdated', readmeData);
     }).fail(function(jqXHR, textStatus, errorThrown) {
         loadReadmeFile('Failed to retrieve README.md\n\n```\n' + textStatus + '\n' + JSON.stringify(errorThrown) + '\n```');
     });
