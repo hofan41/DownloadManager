@@ -40,7 +40,7 @@ module.exports = [{
             isAPI: true
         },
         plugins: {
-            gatekeeper: {
+            clapper: {
                 delete: true
             }
         },
@@ -59,7 +59,7 @@ module.exports = [{
             isAPI: true
         },
         plugins: {
-            gatekeeper: {
+            clapper: {
                 upload: true
             }
         },
@@ -95,7 +95,7 @@ module.exports = [{
             isAPI: true
         },
         plugins: {
-            gatekeeper: {
+            clapper: {
                 upload: true
             }
         },
@@ -115,7 +115,7 @@ module.exports = [{
     handler: Api.downloadFile,
     config: {
         plugins: {
-            gatekeeper: {
+            clapper: {
                 download: true
             }
         },
@@ -135,7 +135,7 @@ module.exports = [{
             isAPI: true
         },
         plugins: {
-            gatekeeper: {
+            clapper: {
                 delete: true
             }
         },
@@ -155,7 +155,7 @@ module.exports = [{
             isAPI: true
         },
         plugins: {
-            gatekeeper: {
+            clapper: {
                 upload: true
             }
         },

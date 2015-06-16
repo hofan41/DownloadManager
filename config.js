@@ -1,7 +1,7 @@
 var isCookieSecure = process.env.COOKIE_IS_SECURE || 'true';
 
 module.exports = {
-    gatekeeper: {
+    clapper: {
         defaultRights: {
             anonymous: {
                 download: process.env.ANONYMOUS_ACCESS_DOWNLOAD || 'false',
@@ -71,7 +71,7 @@ module.exports = {
                 upload: 'true'
             },
             plugins: [{
-                register: require('./plugins/gatekeeper/providers/phabricatorRoles'),
+                register: require('./plugins/clapper/providers/phabricatorRoles'),
                 options: [{
                     roleName: 'admin',
                     accessRights: {

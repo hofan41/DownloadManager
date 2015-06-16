@@ -22,7 +22,7 @@ exports.register = function(server, options, next) {
     var settings = result.value;
 
     // Requires the session plugin
-    server.dependency(['gatekeeper']);
+    server.dependency(['clapper']);
 
     // Called by gatekeeper when user has logged in successfully via this provider.
     server.expose('onLoginSuccess', function(request) {

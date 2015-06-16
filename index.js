@@ -34,8 +34,8 @@ internals.server.views({
 
 internals.server.register([
     require('./plugins/fileNotifications'), {
-        register: require('./plugins/gatekeeper'),
-        options: require('./config').gatekeeper
+        register: require('clapper'),
+        options: require('./config').clapper
     }
 ], function(err) {
     Hoek.assert(!err, 'Failed loading plugin: ' + err);
