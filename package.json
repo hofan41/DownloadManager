@@ -30,6 +30,6 @@
     "grunt-env": "0.x.x",
     "grunt-lab": "2.x.x",
     "code": "1.x.x",
-    "lab": "5.x.x"
+    "lab": "5.9.x"
   }
 }
