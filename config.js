@@ -9,7 +9,7 @@ module.exports = {
                 delete: process.env.ANONYMOUS_ACCESS_DELETE || 'false'
             },
             authenticated: {
-                download: process.env.AUTHENTICATED_ACCESS_DOWNLOAD || 'true',
+                download: process.env.AUTHENTICATED_ACCESS_DOWNLOAD || 'false',
                 upload: process.env.AUTHENTICATED_ACCESS_UPLOAD || 'false',
                 delete: process.env.AUTHENTICATED_ACCESS_DELETE || 'false'
             }
@@ -49,6 +49,17 @@ module.exports = {
                 password: process.env.COOKIE_ENCRYPTION_PASSWORD,
                 clientId: process.env.GITHUB_APP_ID,
                 clientSecret: process.env.GITHUB_APP_SECRET,
+                isSecure: isCookieSecure,
+                forceHttps: isCookieSecure
+            }
+        }, {
+            displayName: 'Twitter',
+            routeName: 'twitter',
+            bellProvider: {
+                provider: 'twitter',
+                password: process.env.COOKIE_ENCRYPTION_PASSWORD,
+                clientId: process.env.TWITTER_APP_ID,
+                clientSecret: process.env.TWITTER_APP_SECRET,
                 isSecure: isCookieSecure,
                 forceHttps: isCookieSecure
             }
