@@ -32,28 +32,47 @@ internals.server.views({
     context: internals.defaultContext
 });
 
-internals.server.register([
-    require('./plugins/fileNotifications'), {
-        register: require('./clapper'),
-        options: require('./config').clapper
+internals.server.register({
+    register: require('good'),
+    options: {
+        reporters: [{
+            reporter: require('good-console'),
+            events: {
+                response: '*',
+                log: '*',
+                error: '*'
+            }
+        }]
     }
-], function(err) {
-    Hoek.assert(!err, 'Failed loading plugin: ' + err);
+}, function(err) {
+    if (err) {
+        throw err;
+    }
+
+    internals.server.register([
+        require('./plugins/fileNotifications'), {
+            register: require('./clapper'),
+            options: require('./config').clapper
+        }
+    ], function(err) {
+        Hoek.assert(!err, 'Failed loading plugin: ' + err);
+    });
+
+    internals.server.route(require('./routes'));
+
+    exports.startServer = internals.startServer = function() {
+        BucketActions.validateSettings().then(function() {
+            internals.server.start(function(err) {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        }).catch(function(err) {
+            console.error(err);
+            process.exit(1);
+        });
+    };
+
+    internals.startServer();    
 });
 
-internals.server.route(require('./routes'));
-
-exports.startServer = internals.startServer = function() {
-    BucketActions.validateSettings().then(function() {
-        internals.server.start(function(err) {
-            if (err) {
-                console.error(err);
-            }
-        });
-    }).catch(function(err) {
-        console.error(err);
-        process.exit(1);
-    });
-};
-
-internals.startServer();
