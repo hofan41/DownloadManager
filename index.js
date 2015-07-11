@@ -34,7 +34,7 @@ internals.server.views({
 
 internals.server.register([
     require('./plugins/fileNotifications'), {
-        register: require('clapper'),
+        register: require('./clapper'),
         options: require('./config').clapper
     }
 ], function(err) {
