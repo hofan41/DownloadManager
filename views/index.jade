@@ -2,15 +2,24 @@ extends layout
 
 block content
     .container
-        .panel.panel-default
-            .panel-heading
-                h3.panel-title Downloads
-            .panel-body
-                table#downloadList.table.table-striped.table-bordered
-                    thead
-                        tr
-                            if accessRights.delete
-                                th
-                                    button.btn.btn-default(type='button', disabled='')
-                                        span.glyphicon.glyphicon-trash(aria-hidden='true')
-                            th Name
+        if accessRights.download
+            .panel.panel-default
+                .panel-heading
+                    h3.panel-title Downloads
+                .panel-body
+                    table#downloadList.table.table-striped.table-bordered
+                        thead
+                            tr
+                                if accessRights.delete
+                                    th
+                                        button.btn.btn-default(type='button', disabled='')
+                                            span.glyphicon.glyphicon-trash(aria-hidden='true')
+                                th Name
+        else
+            .panel.panel-danger
+                .panel-heading
+                    h3.panel-title 
+                        span.glyphicon.glyphicon-exclamation-sign(aria-hidden='true')
+                        |  Restricted Access
+                .panel-body
+                    p Please login.

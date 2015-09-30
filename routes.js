@@ -24,6 +24,11 @@ module.exports = [{
     method: 'GET',
     handler: Pages.download,
     config: {
+        plugins: {
+            clapper: {
+                download: true
+            }
+        },
         validate: {
             params: {
                 downloadName: internals.joiDownloadName
@@ -151,6 +156,11 @@ module.exports = [{
     config: {
         app: {
             isAPI: true
+        },
+        plugins: {
+            clapper: {
+                download: true
+            }
         }
     }
 }, {
