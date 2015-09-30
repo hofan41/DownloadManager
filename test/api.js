@@ -19,17 +19,6 @@ lab.experiment('unauthenticated login tests', function() {
         });
     });
 
-    lab.test('not found page works', function(done) {
-        downloadManager.server.inject({
-            url: '/download/test123/',
-            method: 'GET'
-        }, function(res) {
-            expect(res.statusCode, 'Status Code').to
-                .equal(400);
-            done();
-        });
-    });
-
     lab.test('create new download unauthorized', function(done) {
         downloadManager.server.inject({
             url: '/api/downloads',
@@ -48,7 +37,7 @@ lab.experiment('unauthenticated login tests', function() {
         'anonymous download file unauthorized',
         function(done) {
             downloadManager.server.inject({
-                url: '/download/test123/api/signedPut' +
+                url: '/api/signedPut/test123' +
                     '?s3ObjectName=testDownload',
                 method: 'GET'
             }, function(res) {
@@ -60,7 +49,7 @@ lab.experiment('unauthenticated login tests', function() {
 
     lab.test('anonymous delete download unauthorized', function(done) {
         downloadManager.server.inject({
-            url: '/download/test123/api',
+            url: '/api/download/test123',
             method: 'DELETE'
         }, function(res) {
             expect(res.statusCode, 'Status Code').to

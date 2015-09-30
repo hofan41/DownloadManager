@@ -108,7 +108,7 @@ $(function() {
                 if (data) {
                     return moment(new Date(data)).format(dateFormat);
                 } else {
-                    return '-'
+                    return '-';
                 }
             }
         }

@@ -1,7 +1,5 @@
 'use strict';
 
-var Boom = require('boom');
-
 exports.home = function(request, reply) {
     return reply.view('index', {
         jsFiles: ['/js/downloadList.js']

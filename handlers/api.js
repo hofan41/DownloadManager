@@ -1,8 +1,5 @@
 'use strict';
 
-var Hoek = require('hoek');
-var Promise = require('promise');
-
 exports.updateReadme = function(request, reply) {
     var self = this;
     var objectName = request.params.downloadName + '/README.md';
@@ -43,28 +40,26 @@ exports.downloadsList = function(request, reply) {
 };
 
 exports.fileList = function(request, reply) {
-    var self = this;
-
     var downloadName = request.params.downloadName;
     return this.s3.listFiles(downloadName).then(function (files) {
 
-            var prunedFiles = [];
-            // Remove the folder name itself from the file list.
-            for (var i = 0; i < files.length; ++i) {
-                if (files[i].Key !== downloadName && files[i].Key !== downloadName + 'README.md') {
-                    prunedFiles.push(files[i]);
-                }
+        var prunedFiles = [];
+        // Remove the folder name itself from the file list.
+        for (var i = 0; i < files.length; ++i) {
+            if (files[i].Key !== downloadName && files[i].Key !== downloadName + 'README.md') {
+                prunedFiles.push(files[i]);
             }
+        }
 
-            return reply({
-                data: prunedFiles
-            });
-        }).catch(function(err) {
-            
-            return reply({
-                message: err.message
-            }).code(400);
+        return reply({
+            data: prunedFiles
         });
+    }).catch(function(err) {
+        
+        return reply({
+            message: err.message
+        }).code(400);
+    });
 };
 
 exports.createNewDownload = function(request, reply) {
