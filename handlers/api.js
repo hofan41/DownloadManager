@@ -115,14 +115,14 @@ exports.getSignedPutDownloadUrl = function(request, reply) {
 };
 
 exports.downloadFile = function(request, reply) {
-    var fileName = request.params.downloadName + '/' + request.params.fileName;
+    var fileName = request.params.downloadName;
 
-    return this.s3.getSignedGetObjectUrl(fileName).then(function(
-        url) {
+    return this.s3.getSignedGetObjectUrl(fileName).then(function (url) {
 
         reply.redirect(url);
 
     }).catch(function(err) {
+        
         return reply({
             message: err.message
         }).code(400);
