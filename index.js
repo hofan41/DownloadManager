@@ -12,7 +12,8 @@ var internals = {};
 exports.server = internals.server = new Hapi.Server();
 
 internals.server.connection({
-    port: Number(process.env.PORT || 8080)
+    port: Number(process.env.PORT || 8080),
+    tls: require('./config').tls
 });
 
 internals.server.bind({

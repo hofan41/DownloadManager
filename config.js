@@ -1,6 +1,28 @@
+var fs = require('fs');
+
 var isCookieSecure = process.env.COOKIE_IS_SECURE || 'true';
 
+var keyFile = null;
+if (process.env.SERVER_TLS_KEY_FILE) {
+    keyFile = fs.readFileSync(process.env.SERVER_TLS_KEY_FILE);
+}
+
+var certFile = null;
+if (process.env.SERVER_TLS_CERT_FILE) {
+    certFile = fs.readFileSync(process.env.SERVER_TLS_CERT_FILE);
+}
+
+var chainFile = null;
+if (process.env.SERVER_TLS_CHAIN_FILE) {
+    chainFile = fs.readFileSync(process.env.SERVER_TLS_CHAIN_FILE);
+}
+
 module.exports = {
+    tls: {
+        key: keyFile,
+        cert: certFile,
+        ca: chainFile
+    },
     clapper: {
         defaultRights: {
             anonymous: {
