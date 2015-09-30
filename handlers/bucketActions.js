@@ -104,7 +104,16 @@ exports.listFiles = internals.listFiles = function(downloadName) {
         Prefix: downloadName,
         Delimiter: '/'
     }).then(function(response) {
-        return response.data.Contents;
+        var returnData = response.data.Contents || [];
+        response.data.CommonPrefixes.forEach(function(directory) {
+
+            returnData.push({
+                Key: directory.Prefix,
+                LastModified: null,
+                IsDirectory: true
+            });
+        });
+        return returnData;
     });
 };
 

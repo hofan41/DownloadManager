@@ -5,8 +5,7 @@ var Api = require('./handlers/api');
 
 var internals = {};
 
-internals.joiDownloadName = Joi.string().label('Download Name').min(3).max(64)
-    .regex(/^[A-Z0-9 -]+$/i).required();
+internals.joiDownloadName = Joi.string().label('Download Name').min(3).required();
 
 internals.joiFileName = Joi.string().label('File Name').required();
 
@@ -21,7 +20,7 @@ module.exports = [{
     method: 'GET',
     handler: Pages.home
 }, {
-    path: '/download/{downloadName}/',
+    path: '/download/{downloadName*}',
     method: 'GET',
     handler: Pages.download,
     config: {
@@ -32,7 +31,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/download/{downloadName}/api',
+    path: '/api/download/{downloadName*}',
     method: 'DELETE',
     handler: Api.deleteDownload,
     config: {
@@ -51,7 +50,24 @@ module.exports = [{
         }
     }
 }, {
-    path: '/download/{downloadName}/api/README.md',
+    path: '/api/download/{downloadName*}',
+    method: 'GET',
+    handler: Api.downloadFile,
+    config: {
+        plugins: {
+            clapper: {
+                download: true
+            }
+        },
+        validate: {
+            params: {
+                downloadName: internals.joiDownloadName,
+                fileName: internals.joiFileName
+            }
+        }
+    }
+}, {
+    path: '/api/readme/{downloadName*}',
     method: 'PUT',
     handler: Api.updateReadme,
     config: {
@@ -73,7 +89,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/download/{downloadName}/api/list',
+    path: '/api/list/{downloadName*}',
     method: 'GET',
     handler: Api.fileList,
     config: {
@@ -87,7 +103,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/download/{downloadName}/api/signedPut',
+    path: '/api/signedPut/{downloadName*}',
     method: 'GET',
     handler: Api.getSignedPutDownloadUrl,
     config: {
@@ -106,43 +122,6 @@ module.exports = [{
             query: {
                 s3ObjectName: internals.s3ObjectName,
                 s3ObjectType: internals.s3ObjectType
-            }
-        }
-    }
-}, {
-    path: '/download/{downloadName}/{fileName}/api',
-    method: 'GET',
-    handler: Api.downloadFile,
-    config: {
-        plugins: {
-            clapper: {
-                download: true
-            }
-        },
-        validate: {
-            params: {
-                downloadName: internals.joiDownloadName,
-                fileName: internals.joiFileName
-            }
-        }
-    }
-}, {
-    path: '/download/{downloadName}/{fileName}/api',
-    method: 'DELETE',
-    handler: Api.deleteFile,
-    config: {
-        app: {
-            isAPI: true
-        },
-        plugins: {
-            clapper: {
-                delete: true
-            }
-        },
-        validate: {
-            params: {
-                downloadName: internals.joiDownloadName,
-                fileName: internals.joiFileName
             }
         }
     }

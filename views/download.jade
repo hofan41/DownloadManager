@@ -10,7 +10,7 @@ block content
                             a(data-toggle='collapse', data-parent='#accordion', href='#collapseFileUpload', aria-expanded='false', aria-controls='collapseFileUpload') Upload File
                     #collapseFileUpload.panel-collapse.collapse(role='tabpanel', aria-labelledby='fileUploadHeading')
                         .panel-body
-                            form.form-inline(action='/download/#{downloadName}/api/signedPut')
+                            form.form-inline(action='/api/signedPut/#{downloadName}')
                                 .form-group
                                     input#uploadFile(type='file')
                                     p.help-block Select a file to upload for #{downloadName}.
@@ -32,7 +32,6 @@ block content
                                         span.glyphicon.glyphicon-trash(aria-hidden='true')
                             th Name
                             th Last Modified
-                            th Author
         .clearfix
             .btn-group.pull-right(role='group')
                 button.btn.btn-disabled(type='button') README.md

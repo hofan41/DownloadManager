@@ -1,6 +1,7 @@
 'use strict';
 
 // Load modules 
+require('dotenv').load();
 var Hapi = require('hapi');
 var Hoek = require('hoek');
 var BucketActions = require('./handlers/bucketActions');
@@ -68,7 +69,7 @@ internals.server.register({
                 }
             });
         }).catch(function(err) {
-            console.error(err);
+            console.error(err.stack);
             process.exit(1);
         });
     };

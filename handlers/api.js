@@ -45,41 +45,22 @@ exports.downloadsList = function(request, reply) {
 exports.fileList = function(request, reply) {
     var self = this;
 
-    var downloadName = request.params.downloadName + '/';
-    return this.s3.listFiles(downloadName).then(
-            function(files) {
-                var prunedFiles = [];
-                // Remove the folder name itself from the file list.
-                for (var i = 0; i < files.length; ++i) {
-                    if (files[i].Key !== downloadName && files[i].Key !== downloadName + 'README.md') {
-                        prunedFiles.push(files[i]);
-                    }
+    var downloadName = request.params.downloadName;
+    return this.s3.listFiles(downloadName).then(function (files) {
+
+            var prunedFiles = [];
+            // Remove the folder name itself from the file list.
+            for (var i = 0; i < files.length; ++i) {
+                if (files[i].Key !== downloadName && files[i].Key !== downloadName + 'README.md') {
+                    prunedFiles.push(files[i]);
                 }
-
-                return Promise.all(prunedFiles.map(function(currentValue) {
-                    return currentValue.Key;
-                }).map(self.s3.headObject));
-            })
-        .then(function(results) {
-
-            var replyData = results.map(function(currentValue) {
-                var data = Hoek.applyToDefaults(currentValue.data, {
-                    Key: currentValue.request.params.Key
-                });
-
-                data.Metadata = data.Metadata || {};
-
-                if (!('author' in data.Metadata)) {
-                    data.Metadata.author = '';
-                }
-
-                return data;
-            });
+            }
 
             return reply({
-                data: replyData
+                data: prunedFiles
             });
         }).catch(function(err) {
+            
             return reply({
                 message: err.message
             }).code(400);

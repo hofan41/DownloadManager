@@ -16,6 +16,7 @@
     "boom": "2.x.x",
     "bower": "1.x.x",
     "clapper": "1.x.x",
+    "dotenv": "^1.2.0",
     "github": "0.x.x",
     "good": "^6.2.0",
     "good-console": "^5.0.2",
@@ -35,6 +36,6 @@
     "grunt-env": "0.x.x",
     "grunt-lab": "2.x.x",
     "code": "1.x.x",
-    "lab": "5.9.x"
+    "lab": "5.10.x"
   }
 }

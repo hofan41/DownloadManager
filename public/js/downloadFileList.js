@@ -40,14 +40,15 @@ $(function() {
     // Initialize Datatables
     var dateFormat = 'LLL';
     var fileNameVar = '{fileName}';
+    var fileNameApiLink = '/api/download/' + fileNameVar;
     var fileNameVarRegex = new RegExp(fileNameVar, 'g');
     var deleteIcon =
         '<div style="display: inline-block;">' +
         '<button type="button" class="btn btn-default deleteDownloadButton">' +
         '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
         '</button>';
-    var deleteButton = '<a href="/download/' + fileNameVar +
-        '/api" role="button" class="btn btn-danger deleteDownloadLink">' +
+    var deleteButton = '<a href="' + fileNameApiLink +
+        '" role="button" class="btn btn-danger deleteDownloadLink">' +
         'Delete</a></div>';
 
     $.fn.dataTable.moment(dateFormat);
@@ -74,38 +75,52 @@ $(function() {
     columns.push({
         data: 'Key',
         render: {
-            display: function(data) {
-                var fileName = data.split(/(\\|\/)/g).pop();
-
-                if (internals.accessRights.download) {
-                    return '<a href="/download/' + data + '/api">' +
-                        fileName + '</a>';
+            sort: function (data, type, full) {
+                if (full.IsDirectory) {
+                    return 'A' + data.replace(internals.downloadName, '');
+                } else {
+                    return 'Z' + data;
                 }
+            },
+            display: function (data, type, full) {
+                var arr = data.split(/(\\|\/)/g);
+                var fileName = arr.pop();
 
-                return fileName;
+                if (full.IsDirectory) {
+                    arr.pop();
+                    fileName = arr.pop() + '/';
+
+                    return '<a href="/download/' + data +'">' + fileName + '</a>';
+                }
+                else if (internals.accessRights.download) {
+                    return '<a href="/api/download/' + data + '">' +
+                        fileName + '</a>';
+                } else {
+                    return fileName;
+                }
             }
         }
     }, {
         data: 'LastModified',
         width: '270px',
-        render: function(data) {
-            return moment(new Date(data)).format(
-                dateFormat);
+        render: {
+            display: function(data) {
+                if (data) {
+                    return moment(new Date(data)).format(dateFormat);
+                } else {
+                    return '-'
+                }
+            }
         }
     });
 
     var lastModifiedIndex = columns.length - 1;
 
-    columns.push({
-        data: 'Metadata.author',
-        width: '135px'
-    });
-
     var dataTable = $('#downloadFileList').DataTable({
         processing: true,
         serverSide: false,
-        ajax: 'api/list',
-        order: [lastModifiedIndex, 'desc'],
+        ajax: '/api/list/' + internals.downloadName,
+        order: [lastModifiedIndex, 'asc'],
         columns: columns
     });
 

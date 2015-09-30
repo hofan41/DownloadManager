@@ -55,7 +55,7 @@ $(function() {
     var dataTable = $('#downloadList').DataTable({
         processing: true,
         serverSide: false,
-        ajax: 'api/list',
+        ajax: '/api/list',
         order: [columns.length - 1, 'asc'],
         columns: columns
     });
@@ -100,7 +100,7 @@ $(function() {
         // Perform ajax request to remove
         $.ajax({
                 type: 'DELETE',
-                url: this.href
+                url: ''
             })
             .fail(function() {
                 // TODO - Figure out what to do if it fails.
