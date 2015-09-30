@@ -1,8 +1,10 @@
 'use strict';
 
+var Path = require('path');
+
 exports.updateReadme = function(request, reply) {
     var self = this;
-    var objectName = request.params.downloadName + '/README.md';
+    var objectName = request.params.downloadName + 'README.md';
 
     return this.s3.putTextObject(objectName, 'public-read', request.payload.content, request.auth.credentials.profile.displayName)
         .then(function() {
@@ -93,8 +95,7 @@ exports.getSignedPutDownloadUrl = function(request, reply) {
 
     var downloadName = request.params.downloadName + '/';
 
-    return this.s3.doesDownloadExist(downloadName).then(function(
-        downloadExists) {
+    return this.s3.doesDownloadExist(downloadName).then(function(downloadExists) {
         if (downloadExists === true) {
             return self.s3.getSignedPutObjectUrl(downloadName +
                 request.query.s3ObjectName,
@@ -122,7 +123,7 @@ exports.downloadFile = function(request, reply) {
         reply.redirect(url);
 
     }).catch(function(err) {
-        
+
         return reply({
             message: err.message
         }).code(400);
@@ -132,7 +133,7 @@ exports.downloadFile = function(request, reply) {
 exports.deleteFile = function(request, reply) {
     var self = this;
 
-    var fileName = request.params.downloadName + '/' + request.params.fileName;
+    var fileName = request.params.downloadName;
     return this.s3.doesDownloadExist(fileName).then(function(fileExists) {
         if (fileExists === true) {
             return self.s3.deleteObject(fileName);
@@ -151,8 +152,7 @@ exports.deleteFile = function(request, reply) {
     }).then(function() {
 
         // Notify other clients via socket.io
-        request.server.methods.refreshDownloadFileList(request.params
-            .downloadName);
+        request.server.methods.refreshDownloadFileList(Path.parse(request.params.downloadName).dir);
 
     }).catch(function(err) {
         return reply({
@@ -164,7 +164,11 @@ exports.deleteFile = function(request, reply) {
 exports.deleteDownload = function(request, reply) {
     var self = this;
 
-    var downloadName = request.params.downloadName + '/';
+    var downloadName = request.params.downloadName;
+
+    if (downloadName.slice(-1) != '/') {
+        return exports.deleteFile.call(this, request, reply);
+    }
 
     // Retrieve all of the files related to the downloadName
     return this.s3.listFiles(downloadName).then(function(files) {

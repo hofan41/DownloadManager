@@ -98,6 +98,11 @@ module.exports = [{
         app: {
             isAPI: true
         },
+        plugins: {
+            clapper: {
+                download: true
+            }
+        },
         validate: {
             params: {
                 downloadName: internals.joiDownloadName

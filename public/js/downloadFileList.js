@@ -9,7 +9,7 @@ $(function() {
     // Initialize Markdown Edit Modal
     var readmeEditOptions = {
         type: 'PUT',
-        url: 'api/README.md'
+        url: '/api/readme/' + internals.downloadName
     };
 
     /* global initializeMarkdownEditModal: true */
