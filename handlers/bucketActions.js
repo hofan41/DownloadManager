@@ -43,6 +43,7 @@ exports.doesDownloadExist = internals.doesDownloadExist = function(
                 return true;
             },
             function(err) {
+                server.log(['dlm'], 'downloadName does not exist: ' + err);
                 // If the error is that the object does not exist
                 if (err.code === 'NotFound') {
                     // Add the object
