@@ -43,7 +43,7 @@ exports.downloadsList = function(request, reply) {
 
 exports.fileList = function(request, reply) {
     var downloadName = request.params.downloadName;
-    return this.s3.listFiles(downloadName).then(function (files) {
+    return this.s3.listFiles(downloadName).then(function(files) {
 
         var prunedFiles = [];
         // Remove the folder name itself from the file list.
@@ -57,7 +57,7 @@ exports.fileList = function(request, reply) {
             data: prunedFiles
         });
     }).catch(function(err) {
-        
+
         return reply({
             message: err.message
         }).code(400);
@@ -93,7 +93,7 @@ exports.createNewDownload = function(request, reply) {
 exports.getSignedPutDownloadUrl = function(request, reply) {
     var self = this;
 
-    var downloadName = request.params.downloadName + '/';
+    var downloadName = request.params.downloadName;
 
     return this.s3.doesDownloadExist(downloadName).then(function(downloadExists) {
         if (downloadExists === true) {
@@ -118,7 +118,7 @@ exports.getSignedPutDownloadUrl = function(request, reply) {
 exports.downloadFile = function(request, reply) {
     var fileName = request.params.downloadName;
 
-    return this.s3.getSignedGetObjectUrl(fileName).then(function (url) {
+    return this.s3.getSignedGetObjectUrl(fileName).then(function(url) {
 
         reply.redirect(url);
 
