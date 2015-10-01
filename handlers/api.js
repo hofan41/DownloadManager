@@ -146,13 +146,12 @@ exports.deleteFile = function(request, reply) {
         reply.continue();
 
         // Wait until the object has been deleted
-        return self.s3.waitFor('objectNotExists',
-            fileName);
+        return self.s3.waitFor('objectNotExists', fileName);
 
     }).then(function() {
 
         // Notify other clients via socket.io
-        request.server.methods.refreshDownloadFileList(Path.parse(request.params.downloadName).dir);
+        request.server.methods.refreshDownloadFileList(Path.parse(request.params.downloadName).dir + '/');
 
     }).catch(function(err) {
         return reply({

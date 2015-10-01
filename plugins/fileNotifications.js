@@ -13,7 +13,7 @@ internals.refreshDownloadList = function() {
 };
 
 internals.refreshDownloadFileList = function(downloadName) {
-    this.emit('refreshDownloadList.' + downloadName + '/');
+    this.emit('refreshDownloadList.' + downloadName);
 };
 
 

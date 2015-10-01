@@ -75,14 +75,14 @@ $(function() {
     columns.push({
         data: 'Key',
         render: {
-            sort: function (data, type, full) {
+            sort: function(data, type, full) {
                 if (full.IsDirectory) {
                     return 'A' + data.replace(internals.downloadName, '');
                 } else {
                     return 'Z' + data;
                 }
             },
-            display: function (data, type, full) {
+            display: function(data, type, full) {
                 var arr = data.split(/(\\|\/)/g);
                 var fileName = arr.pop();
 
@@ -90,9 +90,8 @@ $(function() {
                     arr.pop();
                     fileName = arr.pop() + '/';
 
-                    return '<a href="/download/' + data +'">' + fileName + '</a>';
-                }
-                else if (internals.accessRights.download) {
+                    return '<a href="/download/' + data + '">' + fileName + '</a>';
+                } else if (internals.accessRights.download) {
                     return '<a href="/api/download/' + data + '">' +
                         fileName + '</a>';
                 } else {
