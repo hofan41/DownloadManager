@@ -95,14 +95,14 @@ exports.getSignedPutDownloadUrl = function(request, reply) {
 
     var downloadName = request.params.downloadName;
 
-    return this.s3.doesDownloadExist(downloadName).then(function(downloadExists) {
-        if (downloadExists === true) {
+    return this.s3.doesDownloadExist(downloadName + request.query.s3ObjectName).then(function(downloadExists) {
+        if (downloadExists === false) {
             return self.s3.getSignedPutObjectUrl(downloadName +
                 request.query.s3ObjectName,
                 request.query.s3ObjectType,
                 request.auth.credentials.profile.displayName);
         } else {
-            throw new Error('Download does not exist!');
+            throw new Error('Download already exists!');
         }
     }).then(function(url) {
         return reply({
