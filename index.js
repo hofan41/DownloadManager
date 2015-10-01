@@ -12,6 +12,7 @@ var internals = {};
 exports.server = internals.server = new Hapi.Server();
 
 internals.server.connection({
+    address: process.env.HOST_ADDRESS || 'localhost',
     port: Number(process.env.PORT || 8080),
     tls: require('./config').tls
 });
@@ -75,6 +76,5 @@ internals.server.register({
         });
     };
 
-    internals.startServer();    
+    internals.startServer();
 });
-
