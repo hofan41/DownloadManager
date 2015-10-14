@@ -2,6 +2,12 @@ extends layout
 
 block content
     .container
+        ul.breadcrumb
+            - var crumbLink = '/download/';
+            each crumb, index in breadcrumbs
+                - crumbLink += crumb + '/';
+                li
+                    a(href="#{crumbLink}") #{crumb}
         if accessRights.upload
             #accordion.panel-group(role='tablist', aria-multiselectable='true')
                 .panel.panel-success

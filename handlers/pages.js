@@ -10,6 +10,7 @@ exports.download = function(request, reply) {
     var downloadName = request.params.downloadName;
     return reply.view('download', {
         downloadName: request.params.downloadName,
+        breadcrumbs: request.params.downloadName.split('/'),
         readme: 'https://' + process.env.AWS_S3_BUCKET + '.s3.amazonaws.com/' + downloadName + 'README.md',
         jsFiles: ['/js/s3Upload.js',
             '/js/uploadNewDownloadFile.js',
