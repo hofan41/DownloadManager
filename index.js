@@ -5,20 +5,29 @@ require('dotenv').load();
 var Hapi = require('hapi');
 var Hoek = require('hoek');
 var BucketActions = require('./handlers/bucketActions');
+var GithubActions = require('./handlers/githubActions');
 
 // Declare internals
 var internals = {};
 
 exports.server = internals.server = new Hapi.Server();
 
-internals.server.connection({
+var connectionOptions = {
     address: process.env.HOST_ADDRESS || 'localhost',
-    port: Number(process.env.PORT || 8080),
-    tls: require('./config').tls
-});
+    port: Number(process.env.PORT || 8080)
+};
+
+var tlsOptions = require('./config').tls;
+
+if (tlsOptions.key && tlsOptions.cert) {
+    connectionOptions.tls = tlsOptions;
+}
+
+internals.server.connection(connectionOptions);
 
 internals.server.bind({
-    s3: BucketActions
+    s3: BucketActions,
+    github: GithubActions
 });
 
 internals.defaultContext = {

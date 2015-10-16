@@ -18,6 +18,7 @@ if (process.env.SERVER_TLS_CHAIN_FILE) {
 }
 
 module.exports = {
+    githubToken: process.env.GITHUB_TOKEN,
     tls: {
         key: keyFile,
         cert: certFile,
@@ -108,7 +109,7 @@ module.exports = {
                 options: [{
                     roleName: 'admin',
                     accessRights: {
-                        delete: 'true'
+                        delete: 'false'
                     }
                 }]
             }]

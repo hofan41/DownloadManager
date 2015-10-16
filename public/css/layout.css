@@ -2,3 +2,18 @@
     outline: 0px !important;
     -webkit-appearance: none;
 }
+
+:not(th).sha {
+	font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+	font-size: 12px;
+}
+
+.avatar {
+	width: 45px;
+	font-size: 45px;
+	margin-right: 10px;
+}
+
+#downloadList {
+	font-size: 13px;
+}

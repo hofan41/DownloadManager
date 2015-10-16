@@ -100,8 +100,7 @@ exports.listBucketDirectories = internals.listBucketDirectories = function() {
 
 exports.listFiles = internals.listFiles = function(downloadName) {
     return internals.listBucket({
-        Prefix: downloadName,
-        Delimiter: '/'
+        Prefix: downloadName
     }).then(function(response) {
         var returnData = response.data.Contents || [];
         response.data.CommonPrefixes.forEach(function(directory) {

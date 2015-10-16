@@ -3,18 +3,24 @@ extends layout
 block content
     .container
         if accessRights.download
+            if breadcrumbs
+                ul.breadcrumb
+                    each crumb, index in breadcrumbs
+                        if index == breadcrumbs.length - 1
+                            li.active
+                                | #{crumb.name}
+                        else
+                            li
+                                a(href="#{crumb.link}") #{crumb.name}
             .panel.panel-default
                 .panel-heading
-                    h3.panel-title Downloads
+                    h3.panel-title #{tableHeading}
                 .panel-body
                     table#downloadList.table.table-striped.table-bordered
                         thead
                             tr
-                                if accessRights.delete
-                                    th
-                                        button.btn.btn-default(type='button', disabled='')
-                                            span.glyphicon.glyphicon-trash(aria-hidden='true')
-                                th Name
+                                each column in columns
+                                    th #{column}
         else
             .panel.panel-danger
                 .panel-heading

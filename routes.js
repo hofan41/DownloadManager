@@ -18,9 +18,9 @@ module.exports = [{
     method: 'GET',
     handler: Pages.home
 }, {
-    path: '/download/{downloadName*}',
+    path: '/repo/{githubUser}/{githubRepo}/{branch}/{commit}/',
     method: 'GET',
-    handler: Pages.download,
+    handler: Pages.commit,
     config: {
         plugins: {
             clapper: {
@@ -29,7 +29,45 @@ module.exports = [{
         },
         validate: {
             params: {
-                downloadName: internals.joiDownloadName
+                githubUser: Joi.string().required(),
+                githubRepo: Joi.string().required(),
+                branch: Joi.string().required(),
+                commit: Joi.string().length(40, 'utf8').required()
+            }
+        }
+    }
+}, {
+    path: '/repo/{githubUser}/{githubRepo}/{branch}/',
+    method: 'GET',
+    handler: Pages.commits,
+    config: {
+        plugins: {
+            clapper: {
+                download: true
+            }
+        },
+        validate: {
+            params: {
+                githubUser: Joi.string().required(),
+                githubRepo: Joi.string().required(),
+                branch: Joi.string().required()
+            }
+        }
+    }
+}, {
+    path: '/repo/{githubUser}/{githubRepo}/',
+    method: 'GET',
+    handler: Pages.branches,
+    config: {
+        plugins: {
+            clapper: {
+                download: true
+            }
+        },
+        validate: {
+            params: {
+                githubUser: Joi.string().required(),
+                githubRepo: Joi.string().required()
             }
         }
     }
@@ -88,6 +126,52 @@ module.exports = [{
             payload: {
                 content: internals.markdownContent.required()
             }
+        }
+    }
+}, {
+    path: '/api/list/{githubUser}/{githubRepo}',
+    method: 'GET',
+    handler: Api.branchList,
+    config: {
+        app: {
+            isAPI: true
+        },
+        plugins: {
+            clapper: {
+                download: true
+            }
+        },
+        validate: {
+            params: {
+                githubUser: Joi.string().required(),
+                githubRepo: Joi.string().required()
+            }
+        }
+    }
+}, {
+    path: '/api/list/{githubUser}/{githubRepo}/{branch}',
+    method: 'GET',
+    handler: Api.commitList,
+    config: {
+        app: {
+            isAPI: true
+        },
+        plugins: {
+            clapper: {
+                download: true
+            }
+        },
+        validate: {
+            params: {
+                githubUser: Joi.string().required(),
+                githubRepo: Joi.string().required(),
+                branch: Joi.string().required()
+            },
+            query: Joi.object({
+                draw: Joi.number().integer(),
+                start: Joi.number().integer(),
+                length: Joi.number().integer()
+            }).unknown()
         }
     }
 }, {
@@ -154,7 +238,7 @@ module.exports = [{
 }, {
     path: '/api/list',
     method: 'GET',
-    handler: Api.downloadsList,
+    handler: Api.repositoryList,
     config: {
         app: {
             isAPI: true

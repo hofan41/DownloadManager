@@ -27,6 +27,70 @@ exports.updateReadme = function(request, reply) {
         });
 };
 
+exports.repositoryList = function(request, reply) {
+
+    return this.github.repos.getAll({}).then(function(repositories) {
+
+        return reply({
+            data: repositories
+        });
+    }).catch(function(err) {
+
+        return reply({
+            message: err.message
+        }).code(400);
+    });
+};
+
+exports.branchList = function(request, reply) {
+
+    return this.github.repos.getBranches({
+        user: request.params.githubUser,
+        repo: request.params.githubRepo
+    }).then(function(branches) {
+
+        return reply({
+            data: branches
+        });
+    }).catch(function(err) {
+
+        return reply({
+            message: err.message
+        }).code(400);
+    });
+};
+
+exports.commitList = function(request, reply) {
+
+    return this.github.repos.getCommits({
+        user: request.params.githubUser,
+        repo: request.params.githubRepo,
+        sha: request.params.branch,
+        per_page: request.query.length,
+        page: (request.query.start + request.query.length) / request.query.length
+
+    }).then(function(commits) {
+
+        var recordsTotal = request.query.start + commits.length;
+
+        if (commits.length == request.query.length) {
+            recordsTotal = request.query.start + request.query.length + 1;
+        }
+
+        return reply({
+            draw: request.query.draw,
+            data: commits,
+            recordsTotal: recordsTotal,
+            recordsFiltered: recordsTotal
+        });
+    }).catch(function(err) {
+
+        return reply({
+            message: err.message
+        }).code(400);
+    });
+};
+
 exports.downloadsList = function(request, reply) {
     // listBucket only returns 1000 items. 
     // Need to update this function to retrieve all items > 1000.
@@ -42,7 +106,7 @@ exports.downloadsList = function(request, reply) {
 };
 
 exports.fileList = function(request, reply) {
-    var downloadName = request.params.downloadName;
+    var downloadName = request.params.downloadName + '/';
     return this.s3.listFiles(downloadName).then(function(files) {
 
         var prunedFiles = [];

@@ -7,47 +7,35 @@
 'use strict';
 
 $(function() {
+    var dateFormat = 'LLL';
     var downloadNameVar = '{downloadName}';
     var downloadNameVarRegex = new RegExp(downloadNameVar, 'g');
-    var downloadLink = '<a href="/download/' + downloadNameVar + '/">' +
-        downloadNameVar + '</a>';
-    var deleteIcon =
-        '<div style="display: inline-block;">' +
-        '<button type="button" class="btn btn-default deleteDownloadButton">' +
-        '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>' +
-        '</button>';
-    var deleteButton = '<a href="/api/download/' + downloadNameVar +
-        '" role="button" class="btn btn-danger deleteDownloadLink">' +
-        'Delete</a></div>';
+    var downloadLink = '<a href="/repo/' + downloadNameVar + '/">' + downloadNameVar + '</a>';
+
+    $.fn.dataTable.moment(dateFormat);
 
     var columns = [];
 
-    if (internals.accessRights.delete) {
-        columns.push({
-            data: null,
-            orderable: false,
-            width: '130px',
-            render: {
-                display: function(data, type, full) {
-                    var downloadName = full.Prefix;
-                    return deleteIcon + '\n\r' +
-                        deleteButton.replace(
-                            downloadNameVarRegex,
-                            downloadName);
-                }
-            }
-        });
-    }
-
     columns.push({
-        data: 'Prefix',
+        data: 'full_name',
         render: {
             display: function(data) {
-                var downloadName = data.substring(
-                    0, data.length - 1);
-                return downloadLink.replace(
-                    downloadNameVarRegex,
-                    downloadName);
+                return downloadLink.replace(downloadNameVarRegex, data);
+            },
+            sort: function(data, type, full) {
+                return data;
+            }
+        }
+    }, {
+        data: 'pushed_at',
+        width: '270px',
+        render: {
+            display: function(data) {
+                if (data) {
+                    return moment(new Date(data)).format(dateFormat);
+                } else {
+                    return '-';
+                }
             }
         }
     });
@@ -55,55 +43,8 @@ $(function() {
     var dataTable = $('#downloadList').DataTable({
         processing: true,
         serverSide: false,
-        ajax: '/api/list',
-        order: [columns.length - 1, 'asc'],
+        ajax: internals.dataTableAjax,
+        order: [0, 'asc'],
         columns: columns
-    });
-
-    dataTable.on('draw.dt', function() {
-        $('a.deleteDownloadLink').hide();
-    });
-
-    var socket = io();
-    socket.on('refreshDownloadList', function() {
-        dataTable.ajax.reload(null, false);
-    });
-
-    // Anytime the user clicks on a trashcan button, the delete link next
-    // to it will be shown.
-    $(document).on('click', 'button.deleteDownloadButton', function() {
-        var deleteLink = $(this).parent().find(
-            'a.deleteDownloadLink');
-        deleteLink.show('slide');
-    });
-
-    // Anytime the user clicks, if there is a delete button shown, hide it.
-    $(document).on('click', function(e) {
-        if (!$(e.target).closest('a.deleteDownloadLink').length) {
-            var deleteLinks = $('a.deleteDownloadLink');
-
-            deleteLinks.each(function() {
-                // Do not toggle for animated buttons
-                if ($(this).is(':visible') &&
-                    !$(this).is(':animated')) {
-                    $(this).hide('slide');
-                }
-            });
-        }
-    });
-
-    $(document).on('click', 'a.deleteDownloadLink', function(e) {
-        e.preventDefault();
-
-        $(this).addClass('disabled');
-
-        // Perform ajax request to remove
-        $.ajax({
-                type: 'DELETE',
-                url: this.href
-            })
-            .fail(function() {
-                // TODO - Figure out what to do if it fails.
-            });
     });
 });

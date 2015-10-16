@@ -19,6 +19,7 @@ html(lang='en')
             var internals = {};
             internals.profile = !{JSON.stringify(profile || {})};
             internals.accessRights = !{JSON.stringify(accessRights || {})};
+            internals.dataTableAjax = !{JSON.stringify(dataTableAjax || '')};
     body(style='padding-top: 100px;')
         include inc/navbar
         block content
