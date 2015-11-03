@@ -100,6 +100,25 @@ $(function() {
             }
         }
     }, {
+        data: 'Size',
+        width: '90px',
+        render: {
+            display: function(data, type, full) {
+                data = full.Size;
+                if (data) {
+                    var numData = Number(data);
+                    if (numData > (1024 * 1024)) {
+                        // Display in megabytes
+                        return Number(numData / (1024 * 1024)).toFixed(2) + ' MB';
+                    } else {
+                        return Number(numData / 1024).toFixed(2) + ' KB';
+                    }
+                } else {
+                    return '-';
+                }
+            }
+        }
+    }, {
         data: 'LastModified',
         width: '270px',
         render: {
@@ -167,9 +186,9 @@ $(function() {
 
         // Perform ajax request to remove
         $.ajax({
-                type: 'DELETE',
-                url: this.href
-            })
+            type: 'DELETE',
+            url: this.href
+        })
             .fail(function() {
                 // TODO - Figure out what to do if it fails.
             });
