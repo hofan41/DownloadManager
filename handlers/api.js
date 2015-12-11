@@ -2,6 +2,7 @@
 
 var Path = require('path');
 var fs = require('fs');
+var UUID = require('node-uuid');
 
 exports.addWebhook = function(request, reply) {
 
@@ -15,6 +16,7 @@ exports.addWebhook = function(request, reply) {
     }
 
     webhooks.webhooks.push({
+        id: UUID.v4(),
         name: request.payload.name,
         repository: request.payload.repository,
         url: request.payload.url,
