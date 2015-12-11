@@ -29,12 +29,14 @@ module.exports = {
             anonymous: {
                 download: process.env.ANONYMOUS_ACCESS_DOWNLOAD || 'false',
                 upload: process.env.ANONYMOUS_ACCESS_UPLOAD || 'false',
-                delete: process.env.ANONYMOUS_ACCESS_DELETE || 'false'
+                delete: process.env.ANONYMOUS_ACCESS_DELETE || 'false',
+                webhooks: process.env.ANONYMOUS_ACCESS_WEBHOOKS || 'false'
             },
             authenticated: {
                 download: process.env.AUTHENTICATED_ACCESS_DOWNLOAD || 'false',
                 upload: process.env.AUTHENTICATED_ACCESS_UPLOAD || 'false',
-                delete: process.env.AUTHENTICATED_ACCESS_DELETE || 'false'
+                delete: process.env.AUTHENTICATED_ACCESS_DELETE || 'false',
+                webhooks: process.env.AUTHENTICATED_ACCESS_WEBHOOKS || 'false'
             }
         },
         cookie: {
@@ -109,7 +111,8 @@ module.exports = {
                 options: [{
                     roleName: 'admin',
                     accessRights: {
-                        delete: 'false'
+                        delete: 'false',
+                        webhooks: 'true'
                     }
                 }]
             }]

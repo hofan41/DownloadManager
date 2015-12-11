@@ -1,0 +1,39 @@
+if accessRights.webhooks
+    #manageWebhooks.modal.fade(tabindex='-1', role='dialog', aria-labelledby='manageWebhooksLabel', aria-hidden='true')
+        .modal-dialog
+            .modal-content
+                .modal-header
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                        span(aria-hidden='true') &times;
+                    h4#manageWebhooksLabel.modal-title Webhooks
+                .modal-body
+                    .alert.alert-danger(role='alert')
+                        span.glyphicon.glyphicon-exclamation-sign(aria-hidden='true')
+                        span.sr-only Error:
+                        span.alert-text(style='margin-left: 5px;')
+                    form.form-horizontal
+                        .form-group
+                            label.col-sm-2.control-label(for='webhookUrl') Url:
+                            .col-sm-8
+                                .input-group
+                                    span.input-group-addon http://
+                                    input#webhookUrl.form-control(type='text', name='url')
+                        .form-group
+                            label.col-sm-2.control-label(for='webhookMethod') Method:
+                            .col-sm-8
+                                select#webhookMethod.form-control(name='method')
+                                    option GET
+                                    option POST
+                                    option PUT
+                                    option DELETE
+                        .form-group
+                            label.col-sm-2.control-label(for='webhookPayload') Payload:
+                            .col-sm-8
+                                textarea#webhookPayload.form-control(name='payload')
+                                p.help-block Optional, only used for POST and PUT.
+                .modal-footer
+                    button.btn.btn-default(type='button', data-dismiss='modal') Close
+                    button#addWebhookSave.btn.btn-primary(type='button') Save
+
+    script(type='text/javascript').
+        var addWebhook = new ModalForm('#manageWebhooks', '#addWebhookSave', 'POST', '/webhook');

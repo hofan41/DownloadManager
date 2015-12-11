@@ -17,4 +17,8 @@ nav.navbar.navbar-default.navbar-fixed-top
                     a(href='/') 
                         | Home 
                         span.sr-only (current)
+                if accessRights.webhooks
+                    li
+                        a(href='#', data-toggle='modal', data-target='#manageWebhooks')
+                            | Webhooks
             include navbarUserProfile
