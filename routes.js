@@ -107,6 +107,29 @@ module.exports = [{
         }
     }
 }, {
+    path: '/webhook',
+    method: 'POST',
+    handler: Api.addWebhook,
+    config: {
+        app: {
+            isAPI: true
+        },
+        plugins: {
+            clapper: {
+                webhooks: true
+            }
+        },
+        validate: {
+            payload: {
+                name: Joi.string().required(),
+                repository: Joi.string().required(),
+                url: Joi.string().uri().required(),
+                method: Joi.any().valid('GET', 'PUT', 'POST', 'DELETE').required(),
+                payload: Joi.string().allow('')
+            }
+        }
+    }
+}, {
     path: '/api/readme/{downloadName*}',
     method: 'PUT',
     handler: Api.updateReadme,

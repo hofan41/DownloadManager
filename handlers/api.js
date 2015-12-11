@@ -1,6 +1,31 @@
 'use strict';
 
 var Path = require('path');
+var fs = require('fs');
+
+exports.addWebhook = function(request, reply) {
+
+    var webhooks = {
+        webhooks: []
+    };
+
+    if (fs.existsSync('webhooks.json')) {
+        console.log(fs.realpathSync('webhooks.json'));
+        webhooks = require(fs.realpathSync('webhooks.json'));
+    }
+
+    webhooks.webhooks.push({
+        name: request.payload.name,
+        repository: request.payload.repository,
+        url: request.payload.url,
+        method: request.payload.method,
+        payload: request.payload.payload
+    });
+
+    fs.writeFileSync('webhooks.json', JSON.stringify(webhooks));
+
+    return reply();
+};
 
 exports.updateReadme = function(request, reply) {
     var self = this;

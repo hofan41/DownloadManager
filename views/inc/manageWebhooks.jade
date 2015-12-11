@@ -13,15 +13,23 @@ if accessRights.webhooks
                         span.alert-text(style='margin-left: 5px;')
                     form.form-horizontal
                         .form-group
+                            label.col-sm-2.control-label(for='webhookName') Name:
+                            .col-sm-8
+                                input#webhookName.form-control(type='text', name='name')
+                        .form-group
+                            label.col-sm-2.control-label(for='webhookRepository') Repository:
+                            .col-sm-8
+                                select#webhookRepository.form-control(name='repository')
+                                    option
+                        .form-group
                             label.col-sm-2.control-label(for='webhookUrl') Url:
                             .col-sm-8
-                                .input-group
-                                    span.input-group-addon http://
-                                    input#webhookUrl.form-control(type='text', name='url')
+                                input#webhookUrl.form-control(type='text', name='url')
                         .form-group
                             label.col-sm-2.control-label(for='webhookMethod') Method:
                             .col-sm-8
                                 select#webhookMethod.form-control(name='method')
+                                    option
                                     option GET
                                     option POST
                                     option PUT
@@ -37,3 +45,8 @@ if accessRights.webhooks
 
     script(type='text/javascript').
         var addWebhook = new ModalForm('#manageWebhooks', '#addWebhookSave', 'POST', '/webhook');
+        $.getJSON("/api/list", function(data) {
+            $.each(data.data, function(key, val) {
+                $('#webhookRepository').append($('<option></option').text(val.name));
+            });
+        });
