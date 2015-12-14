@@ -107,7 +107,32 @@ module.exports = [{
         }
     }
 }, {
-    path: '/webhook',
+    path: '/webhooks',
+    method: 'GET',
+    handler: Pages.webhooks,
+    config: {
+        plugins: {
+            clapper: {
+                download: true
+            }
+        }
+    }
+}, {
+    path: '/api/webhooks',
+    method: 'GET',
+    handler: Api.getWebhooks,
+    config: {
+        app: {
+            isAPI: true
+        },
+        plugins: {
+            clapper: {
+                webhooks: true
+            }
+        }
+    }
+}, {
+    path: '/api/webhook',
     method: 'POST',
     handler: Api.addWebhook,
     config: {
@@ -130,7 +155,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/webhook/{id}',
+    path: '/api/webhook/{id}',
     method: 'DELETE',
     handler: Api.deleteWebhook,
     config: {

@@ -8,9 +8,9 @@ var internals = {};
 
 internals.webhookFile = 'webhooks.json';
 
-exports.getWebhooks = function() {
+internals._getWebhooks = function() {
     var webhooks = {
-        webhooks: []
+        data: []
     };
 
     if (fs.existsSync(internals.webhookFile)) {
@@ -22,9 +22,9 @@ exports.getWebhooks = function() {
 
 internals.addWebhook = function(webhook) {
 
-    var webhooks = exports.getWebhooks();
+    var webhooks = internals._getWebhooks();
 
-    webhooks.webhooks.push({
+    webhooks.data.push({
         id: UUID.v4(),
         name: webhook.name,
         repository: webhook.repository,
@@ -38,31 +38,40 @@ internals.addWebhook = function(webhook) {
 
 internals.deleteWebhook = function(webhookId) {
 
-    var webhooks = exports.getWebhooks();
+    var webhooks = internals._getWebhooks();
 
     var foundIndex = -1;
-    for (var i = 0; i < webhooks.webhooks.length; i++) {
-        if (webhooks.webhooks[i].id == webhookId) {
+    for (var i = 0; i < webhooks.data.length; i++) {
+        if (webhooks.data[i].id == webhookId) {
             foundIndex = i;
         }
     }
 
     if (foundIndex > -1) {
-        webhooks.webhooks.splice(foundIndex, 1);
+        webhooks.data.splice(foundIndex, 1);
     }
 
     fs.writeFileSync(internals.webhookFile, JSON.stringify(webhooks));
 };
 
+exports.getWebhooks = function(request, reply) {
+
+    return reply(internals._getWebhooks());
+};
+
 exports.addWebhook = function(request, reply) {
 
     internals.addWebhook(request.payload);
+
+    request.server.methods.refreshWebhookList();
     return reply();
 };
 
 exports.deleteWebhook = function(request, reply) {
 
     internals.deleteWebhook(request.params.id);
+
+    request.server.methods.refreshWebhookList();
     return reply();
 };
 

@@ -1,24 +1,11 @@
 if accessRights.webhooks
-    #manageWebhooks.modal.fade(tabindex='-1', role='dialog', aria-labelledby='manageWebhooksLabel', aria-hidden='true')
+    #createWebhook.modal.fade(tabindex='-1', role='dialog', aria-labelledby='createWebhookLabel', aria-hidden='true')
         .modal-dialog
             .modal-content
                 .modal-header
                     button.close(type='button', data-dismiss='modal', aria-label='Close')
                         span(aria-hidden='true') &times;
-                    h4#manageWebhooksLabel.modal-title Webhooks
-                .table-responsive
-                    table.table.table-striped.table-hover.table-condensed
-                        each webhook in helpers.getWebhooks()
-                            tr
-                                td
-                                    button.deleteWebhook.close(id=webhook.id, type='button', aria-label='Delete')
-                                        span(aria-hidden='true') &times;
-                                td
-                                    | #{webhook.name}
-                                td
-                                    | #{webhook.method}
-                                td
-                                    | #{webhook.url}
+                    h4#createWebhookLabel.modal-title Webhooks
                 .modal-body
                     .alert.alert-danger(role='alert')
                         span.glyphicon.glyphicon-exclamation-sign(aria-hidden='true')
@@ -57,7 +44,7 @@ if accessRights.webhooks
                     button#addWebhookSave.btn.btn-primary(type='button') Save
 
     script(type='text/javascript').
-        var addWebhook = new ModalForm('#manageWebhooks', '#addWebhookSave', 'POST', '/webhook');
+        var addWebhook = new ModalForm('#createWebhook', '#addWebhookSave', 'POST', '/api/webhook');
         $.getJSON("/api/list", function(data) {
             $.each(data.data, function(key, val) {
                 $('#webhookRepository').append($('<option></option').text(val.name));

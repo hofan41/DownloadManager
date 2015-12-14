@@ -76,14 +76,9 @@ internals.server.register({
         var response = request.response;
 
         if (response.variety === 'view') {
-            console.log('applying to defaults');
             var context = response.source.context || {};
 
             context.helpers = require('./helpers');
-
-            //            context = Hoek.applyToDefaults(context, require('./helpers'));
-
-            console.log(context);
         }
 
         return reply.continue();

@@ -16,6 +16,9 @@ internals.refreshDownloadFileList = function(downloadName) {
     this.emit('refreshDownloadList.' + downloadName);
 };
 
+internals.refreshWebhookList = function() {
+    this.emit('refreshWebhookList');
+};
 
 exports.register = function(server, options, next) {
     internals.io = require('socket.io')(server.listener);
@@ -35,6 +38,12 @@ exports.register = function(server, options, next) {
     }, {
         name: 'refreshReadmeFile',
         method: internals.refreshReadmeFile,
+        options: {
+            bind: internals.io
+        }
+    }, {
+        name: 'refreshWebhookList',
+        method: internals.refreshWebhookList,
         options: {
             bind: internals.io
         }

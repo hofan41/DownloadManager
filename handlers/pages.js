@@ -53,6 +53,16 @@ exports.home = function(request, reply) {
     });
 };
 
+exports.webhooks = function(request, reply) {
+
+    return reply.view('webhooks', {
+        tableHeading: 'Webhooks',
+        dataTableAjax: '/api/webhooks',
+        columns: ['', 'Repository', 'Name', 'Method', 'Url', 'Payload'],
+        jsFiles: ['/js/webhookList.js']
+    });
+};
+
 exports.download = function(request, reply) {
     var downloadName = request.params.downloadName;
     return reply.view('download', {
