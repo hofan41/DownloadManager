@@ -4,28 +4,65 @@ var Path = require('path');
 var fs = require('fs');
 var UUID = require('node-uuid');
 
-exports.addWebhook = function(request, reply) {
+var internals = {};
 
+internals.webhookFile = 'webhooks.json';
+
+exports.getWebhooks = function() {
     var webhooks = {
         webhooks: []
     };
 
-    if (fs.existsSync('webhooks.json')) {
-        console.log(fs.realpathSync('webhooks.json'));
-        webhooks = require(fs.realpathSync('webhooks.json'));
+    if (fs.existsSync(internals.webhookFile)) {
+        webhooks = require(fs.realpathSync(internals.webhookFile));
     }
+
+    return webhooks;
+}
+
+internals.addWebhook = function(webhook) {
+
+    var webhooks = exports.getWebhooks();
 
     webhooks.webhooks.push({
         id: UUID.v4(),
-        name: request.payload.name,
-        repository: request.payload.repository,
-        url: request.payload.url,
-        method: request.payload.method,
-        payload: request.payload.payload
+        name: webhook.name,
+        repository: webhook.repository,
+        url: webhook.url,
+        method: webhook.method,
+        payload: webhook.payload
     });
 
-    fs.writeFileSync('webhooks.json', JSON.stringify(webhooks));
+    fs.writeFileSync(internals.webhookFile, JSON.stringify(webhooks));
+};
 
+internals.deleteWebhook = function(webhookId) {
+
+    var webhooks = exports.getWebhooks();
+
+    var foundIndex = -1;
+    for (var i = 0; i < webhooks.webhooks.length; i++) {
+        if (webhooks.webhooks[i].id == webhookId) {
+            foundIndex = i;
+        }
+    }
+
+    if (foundIndex > -1) {
+        webhooks.webhooks.splice(foundIndex, 1);
+    }
+
+    fs.writeFileSync(internals.webhookFile, JSON.stringify(webhooks));
+};
+
+exports.addWebhook = function(request, reply) {
+
+    internals.addWebhook(request.payload);
+    return reply();
+};
+
+exports.deleteWebhook = function(request, reply) {
+
+    internals.deleteWebhook(request.params.id);
     return reply();
 };
 

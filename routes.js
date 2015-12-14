@@ -130,6 +130,25 @@ module.exports = [{
         }
     }
 }, {
+    path: '/webhook/{id}',
+    method: 'DELETE',
+    handler: Api.deleteWebhook,
+    config: {
+        app: {
+            isAPI: true
+        },
+        plugins: {
+            clapper: {
+                webhooks: true
+            }
+        },
+        validate: {
+            params: {
+                id: Joi.string().guid().required()
+            }
+        }
+    }
+}, {
     path: '/api/readme/{downloadName*}',
     method: 'PUT',
     handler: Api.updateReadme,

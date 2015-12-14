@@ -6,6 +6,19 @@ if accessRights.webhooks
                     button.close(type='button', data-dismiss='modal', aria-label='Close')
                         span(aria-hidden='true') &times;
                     h4#manageWebhooksLabel.modal-title Webhooks
+                .table-responsive
+                    table.table.table-striped.table-hover.table-condensed
+                        each webhook in helpers.getWebhooks()
+                            tr
+                                td
+                                    button.deleteWebhook.close(id=webhook.id, type='button', aria-label='Delete')
+                                        span(aria-hidden='true') &times;
+                                td
+                                    | #{webhook.name}
+                                td
+                                    | #{webhook.method}
+                                td
+                                    | #{webhook.url}
                 .modal-body
                     .alert.alert-danger(role='alert')
                         span.glyphicon.glyphicon-exclamation-sign(aria-hidden='true')
@@ -14,20 +27,20 @@ if accessRights.webhooks
                     form.form-horizontal
                         .form-group
                             label.col-sm-2.control-label(for='webhookName') Name:
-                            .col-sm-8
+                            .col-sm-10
                                 input#webhookName.form-control(type='text', name='name')
                         .form-group
                             label.col-sm-2.control-label(for='webhookRepository') Repository:
-                            .col-sm-8
+                            .col-sm-10
                                 select#webhookRepository.form-control(name='repository')
                                     option
                         .form-group
                             label.col-sm-2.control-label(for='webhookUrl') Url:
-                            .col-sm-8
+                            .col-sm-10
                                 input#webhookUrl.form-control(type='text', name='url')
                         .form-group
                             label.col-sm-2.control-label(for='webhookMethod') Method:
-                            .col-sm-8
+                            .col-sm-10
                                 select#webhookMethod.form-control(name='method')
                                     option
                                     option GET
@@ -36,7 +49,7 @@ if accessRights.webhooks
                                     option DELETE
                         .form-group
                             label.col-sm-2.control-label(for='webhookPayload') Payload:
-                            .col-sm-8
+                            .col-sm-10
                                 textarea#webhookPayload.form-control(name='payload')
                                 p.help-block Optional, only used for POST and PUT.
                 .modal-footer
@@ -49,4 +62,7 @@ if accessRights.webhooks
             $.each(data.data, function(key, val) {
                 $('#webhookRepository').append($('<option></option').text(val.name));
             });
+        });
+        $('.deleteWebhook').on('click', function(){
+            ;
         });
