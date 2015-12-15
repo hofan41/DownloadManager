@@ -167,8 +167,9 @@ module.exports = [{
                 webhookId: Joi.string().guid().required()
             },
             query: {
-                url: Joi.string().required(),
-                commit: Joi.string().length(40, 'utf8').required()
+                url: Joi.string().allow(''),
+                commit: Joi.string().length(40, 'utf8').required(),
+                status: Joi.string().required()
             }
         }
     }

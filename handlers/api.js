@@ -97,12 +97,20 @@ exports.jenkinsUpdateWebhook = function(request, reply) {
 
             webhook.commitsRunning = webhook.commitsRunning || {};
             webhook.commitsRunning[request.query.commit] = {};
-            webhook.commitsRunning[request.params.commit].status = 'running';
-            webhook.commitsRunning[request.query.commit].jenkinsUrl = request.query.url;
+            webhook.commitsRunning[request.query.commit].status = request.query.status;
+
+            if (request.query.url) {
+                webhook.commitsRunning[request.query.commit].jenkinsUrl = request.query.url;
+            }
 
             internals.persistWebhooks(webhooks);
 
-            request.server.methods.updateWebhookStatus('running', request.params.webhookId);
+            request.server.methods.updateWebhookStatus({
+                status: request.query.status,
+                id: request.params.webhookId,
+                label: webhook.name
+            });
+
             return reply.continue();
         }
     }

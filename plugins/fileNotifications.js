@@ -20,10 +20,8 @@ internals.refreshWebhookList = function() {
     this.emit('refreshWebhookList');
 };
 
-internals.updateWebhookStatus = function(status, webhookId) {
-    this.emit('updateWebhookStatus.' + webhookId, {
-        status: status
-    });
+internals.updateWebhookStatus = function(data) {
+    this.emit('updateWebhookStatus.' + data.id, data);
 };
 
 exports.register = function(server, options, next) {
