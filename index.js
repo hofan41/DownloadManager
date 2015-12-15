@@ -13,7 +13,7 @@ var internals = {};
 exports.server = internals.server = new Hapi.Server();
 
 var connectionOptions = {
-    address: process.env.HOST_ADDRESS || 'localhost',
+    address: process.env.HOST_ADDRESS || '0.0.0.0',
     port: Number(process.env.PORT || 8080)
 };
 

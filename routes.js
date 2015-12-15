@@ -155,7 +155,7 @@ module.exports = [{
         }
     }
 }, {
-    path: '/api/webhook/{webhookId}/jenkins',
+    path: '/api/webhook/jenkins',
     method: 'GET',
     handler: Api.jenkinsUpdateWebhook,
     config: {
@@ -163,14 +163,12 @@ module.exports = [{
             isAPI: true
         },
         validate: {
-            params: {
-                webhookId: Joi.string().guid().required()
-            },
-            query: {
+            query: Joi.object({
+                webhook: Joi.string().guid().required(),
                 url: Joi.string().allow(''),
                 commit: Joi.string().length(40, 'utf8').required(),
                 status: Joi.string().required()
-            }
+            }).unknown(true)
         }
     }
 }, {

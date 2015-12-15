@@ -92,7 +92,7 @@ exports.jenkinsUpdateWebhook = function(request, reply) {
 
     var webhooks = internals._getWebhooks();
     for (var i = 0; i < webhooks.data.length; i++) {
-        if (webhooks.data[i].id == request.params.webhookId) {
+        if (webhooks.data[i].id == request.query.webhook) {
             var webhook = webhooks.data[i];
 
             webhook.commitsRunning = webhook.commitsRunning || {};
@@ -107,7 +107,7 @@ exports.jenkinsUpdateWebhook = function(request, reply) {
 
             request.server.methods.updateWebhookStatus({
                 status: request.query.status,
-                id: request.params.webhookId,
+                id: request.query.webhook,
                 label: webhook.name
             });
 
