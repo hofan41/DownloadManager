@@ -3,22 +3,28 @@
 var Path = require('path');
 var fs = require('fs');
 var UUID = require('node-uuid');
+var Wreck = require('wreck');
 
 var internals = {};
 
 internals.webhookFile = 'webhooks.json';
 
-internals._getWebhooks = function() {
+exports._getWebhooks = internals._getWebhooks = function() {
     var webhooks = {
         data: []
     };
 
     if (fs.existsSync(internals.webhookFile)) {
-        webhooks = require(fs.realpathSync(internals.webhookFile));
+        webhooks = JSON.parse(fs.readFileSync(fs.realpathSync(internals.webhookFile), 'utf8'));
     }
 
     return webhooks;
-}
+};
+
+internals.persistWebhooks = function(webhooks) {
+
+    fs.writeFileSync(internals.webhookFile, JSON.stringify(webhooks));
+};
 
 internals.addWebhook = function(webhook) {
 
@@ -33,7 +39,7 @@ internals.addWebhook = function(webhook) {
         payload: webhook.payload
     });
 
-    fs.writeFileSync(internals.webhookFile, JSON.stringify(webhooks));
+    internals.persistWebhooks(webhooks);
 };
 
 internals.deleteWebhook = function(webhookId) {
@@ -51,7 +57,7 @@ internals.deleteWebhook = function(webhookId) {
         webhooks.data.splice(foundIndex, 1);
     }
 
-    fs.writeFileSync(internals.webhookFile, JSON.stringify(webhooks));
+    internals.persistWebhooks(webhooks);
 };
 
 exports.getWebhooks = function(request, reply) {
@@ -64,7 +70,90 @@ exports.addWebhook = function(request, reply) {
     internals.addWebhook(request.payload);
 
     request.server.methods.refreshWebhookList();
-    return reply();
+    return reply.continue();
+};
+
+internals.injectWebhookVars = function(str, params) {
+
+    var result = str;
+
+    if (result) {
+        result = result.replace(/\$V_COMMIT/g, params.commit);
+        result = result.replace(/\$V_BRANCH/g, params.branch);
+        result = result.replace(/\$V_USER/g, params.githubUser);
+        result = result.replace(/\$V_REPO/g, params.githubRepo);
+        result = result.replace(/\$V_WEBHOOK/g, params.webhookId);
+    }
+
+    return result;
+};
+
+exports.jenkinsUpdateWebhook = function(request, reply) {
+
+    var webhooks = internals._getWebhooks();
+    for (var i = 0; i < webhooks.data.length; i++) {
+        if (webhooks.data[i].id == request.params.webhookId) {
+            var webhook = webhooks.data[i];
+
+            webhook.commitsRunning = webhook.commitsRunning || {};
+            webhook.commitsRunning[request.query.commit] = {};
+            webhook.commitsRunning[request.params.commit].status = 'running';
+            webhook.commitsRunning[request.query.commit].jenkinsUrl = request.query.url;
+
+            internals.persistWebhooks(webhooks);
+
+            request.server.methods.updateWebhookStatus('running', request.params.webhookId);
+            return reply.continue();
+        }
+    }
+
+    return reply().code(400);
+};
+
+exports.runWebhook = function(request, reply) {
+
+    // retrieve the webhook information
+    var foundWebhook = false;
+    var webhooks = internals._getWebhooks();
+    for (var i = 0; i < webhooks.data.length; i++) {
+        if (webhooks.data[i].id == request.params.webhookId) {
+            foundWebhook = true;
+            var webhook = webhooks.data[i];
+
+            // check if this webhook is already running
+            if (webhook.commitsRunning && webhook.commitsRunning[request.params.commit]) {
+                return reply.continue();
+            }
+
+            var url = internals.injectWebhookVars(webhook.url, request.params);
+            var payload = internals.injectWebhookVars(webhook.payload, request.params);
+
+            request.server.log('response', 'Issuing Webhook Request: ' + url);
+
+            Wreck.request(webhook.method, url, {
+                payload: payload
+            }, function(err, response) {
+
+                if (err) {
+                    return reply().code(400);
+                }
+
+                webhook.commitsRunning = webhook.commitsRunning || {};
+                webhook.commitsRunning[request.params.commit] = {};
+                webhook.commitsRunning[request.params.commit].status = 'queued';
+
+                internals.persistWebhooks(webhooks);
+
+                request.server.methods.updateWebhookStatus('queued', request.params.webhookId);
+
+                return reply.continue();
+            });
+        }
+    }
+
+    if (!foundWebhook) {
+        return reply().code(400);
+    }
 };
 
 exports.deleteWebhook = function(request, reply) {
@@ -72,7 +161,7 @@ exports.deleteWebhook = function(request, reply) {
     internals.deleteWebhook(request.params.id);
 
     request.server.methods.refreshWebhookList();
-    return reply();
+    return reply.continue();
 };
 
 exports.updateReadme = function(request, reply) {

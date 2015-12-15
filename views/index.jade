@@ -8,10 +8,14 @@ block content
                     each crumb, index in breadcrumbs
                         if index == breadcrumbs.length - 1
                             li.active
+                                | 
                                 | #{crumb.name}
+                                | 
                         else
                             li
+                                | 
                                 a(href="#{crumb.link}") #{crumb.name}
+                                | 
             .panel.panel-default
                 .panel-heading
                     h3.panel-title #{tableHeading}

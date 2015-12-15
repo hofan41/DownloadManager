@@ -135,6 +135,7 @@ $(function() {
     var lastModifiedIndex = columns.length - 1;
 
     var dataTable = $('#downloadFileList').DataTable({
+        paging: false,
         processing: true,
         serverSide: false,
         ajax: '/api/list/' + internals.downloadName,

@@ -20,6 +20,12 @@ internals.refreshWebhookList = function() {
     this.emit('refreshWebhookList');
 };
 
+internals.updateWebhookStatus = function(status, webhookId) {
+    this.emit('updateWebhookStatus.' + webhookId, {
+        status: status
+    });
+};
+
 exports.register = function(server, options, next) {
     internals.io = require('socket.io')(server.listener);
 
@@ -44,6 +50,12 @@ exports.register = function(server, options, next) {
     }, {
         name: 'refreshWebhookList',
         method: internals.refreshWebhookList,
+        options: {
+            bind: internals.io
+        }
+    }, {
+        name: 'updateWebhookStatus',
+        method: internals.updateWebhookStatus,
         options: {
             bind: internals.io
         }

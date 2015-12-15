@@ -20,8 +20,8 @@ html(lang='en')
             internals.profile = !{JSON.stringify(profile || {})};
             internals.accessRights = !{JSON.stringify(accessRights || {})};
             internals.dataTableAjax = !{JSON.stringify(dataTableAjax || '')};
+        include inc/scripts
     body(style='padding-top: 100px;')
         include inc/navbar
         block content
-        include inc/scripts
         include inc/manageWebhooks

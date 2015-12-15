@@ -155,6 +155,47 @@ module.exports = [{
         }
     }
 }, {
+    path: '/api/webhook/{webhookId}/jenkins',
+    method: 'GET',
+    handler: Api.jenkinsUpdateWebhook,
+    config: {
+        app: {
+            isAPI: true
+        },
+        validate: {
+            params: {
+                webhookId: Joi.string().guid().required()
+            },
+            query: {
+                url: Joi.string().required(),
+                commit: Joi.string().length(40, 'utf8').required()
+            }
+        }
+    }
+}, {
+    path: '/repo/{githubUser}/{githubRepo}/{branch}/{commit}/webhook/{webhookId}',
+    method: 'POST',
+    handler: Api.runWebhook,
+    config: {
+        app: {
+            isAPI: true
+        },
+        plugins: {
+            clapper: {
+                upload: true
+            }
+        },
+        validate: {
+            params: {
+                webhookId: Joi.string().guid().required(),
+                githubUser: Joi.string().required(),
+                githubRepo: Joi.string().required(),
+                branch: Joi.string().required(),
+                commit: Joi.string().length(40, 'utf8').required()
+            }
+        }
+    }
+}, {
     path: '/api/webhook/{id}',
     method: 'DELETE',
     handler: Api.deleteWebhook,

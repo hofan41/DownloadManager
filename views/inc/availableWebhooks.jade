@@ -1,0 +1,14 @@
+if accessRights.upload
+    - var webhooks = helpers.getWebhooks()
+    if webhooks.length > 0
+        .btn-group(role='group', aria-label='Actions').panel-group
+            a.btn.btn-primary(role='button') Actions
+            each webhook in webhooks
+                a.btn.btn-default.webhook-action(role='button', id='#{webhook.id}', href='webhook/#{webhook.id}', data-running-text='#{webhook.name} (Running)', data-queued-text='#{webhook.name} (Queued)') #{webhook.name}
+                if webhook.commitsRunning && webhook.commitsRunning[downloadName]
+                    script(type='text/javascript').
+                        $(function(){
+                            $('##{webhook.id}').button('#{webhook.commitsRunning[downloadName].status}');
+                            $('##{webhook.id}').addClass('disabled');
+                        });
+        script(type='text/javascript', charset='utf-8', src='/js/availableWebhooks.js')
