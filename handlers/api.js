@@ -117,6 +117,12 @@ exports.jenkinsUpdateWebhook = function(request, reply) {
                 label: webhook.name
             });
 
+            if (request.query.status == 'success') {
+                // Tell clients to refresh download list
+                request.server.methods.refreshDownloadFileList(request.query.commit);
+            }
+
+
             return reply.continue();
         }
     }
