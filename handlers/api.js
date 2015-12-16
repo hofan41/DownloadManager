@@ -93,6 +93,13 @@ internals.injectWebhookVars = function(str, params) {
     return result;
 };
 
+exports.refreshDownloadsWebhook = function(request, reply) {
+
+    reply.continue();
+
+    request.server.methods.refreshDownloadFileList(request.query.commit);
+};
+
 exports.jenkinsUpdateWebhook = function(request, reply) {
 
     var webhooks = internals._getWebhooks();

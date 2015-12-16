@@ -155,6 +155,20 @@ module.exports = [{
         }
     }
 }, {
+    path: '/api/webhook/refreshDownload',
+    method: 'GET',
+    handler: Api.refreshDownloadsWebhook,
+    config: {
+        app: {
+            isAPI: true
+        },
+        validate: {
+            query: {
+                commit: Joi.string().length(40, 'utf8').required()
+            }
+        }
+    }
+}, {
     path: '/api/webhook/jenkins',
     method: 'GET',
     handler: Api.jenkinsUpdateWebhook,
