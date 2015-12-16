@@ -139,7 +139,7 @@ $(function() {
         processing: true,
         serverSide: false,
         ajax: '/api/list/' + internals.downloadName,
-        order: [lastModifiedIndex, 'asc'],
+        order: [lastModifiedIndex, 'desc'],
         columns: columns
     });
 
