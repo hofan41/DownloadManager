@@ -129,7 +129,9 @@ exports.runWebhook = function(request, reply) {
             var webhook = webhooks.data[i];
 
             // check if this webhook is already running
-            if (webhook.commitsRunning && webhook.commitsRunning[request.params.commit]) {
+            if (webhook.commitsRunning &&
+                webhook.commitsRunning[request.params.commit] &&
+                webhook.commitsRunning[request.params.commit].status != 'fail') {
                 return reply.continue();
             }
 
