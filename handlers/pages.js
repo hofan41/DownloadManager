@@ -102,7 +102,7 @@ exports.commit = function(request, reply) {
     return reply.view('download', {
         downloadName: hash,
         breadcrumbs: internals.getBreadcrumbs(request.params),
-        readme: 'https://' + process.env.AWS_S3_BUCKET + '.s3.amazonaws.com/' + hash + 'README.md',
+        readme: 'https://' + process.env.AWS_S3_BUCKET + '.s3.amazonaws.com/' + hash + '/README.md',
         jsFiles: ['/js/s3Upload.js',
             '/js/uploadNewDownloadFile.js',
             '/js/initializeMarkdownEditModal.js',

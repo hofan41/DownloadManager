@@ -200,7 +200,7 @@ exports.deleteWebhook = function(request, reply) {
 
 exports.updateReadme = function(request, reply) {
     var self = this;
-    var objectName = request.params.downloadName + 'README.md';
+    var objectName = request.params.downloadName + '/README.md';
 
     return this.s3.putTextObject(objectName, 'public-read', request.payload.content, request.auth.credentials.profile.displayName)
         .then(function() {
@@ -308,7 +308,7 @@ exports.fileList = function(request, reply) {
         var prunedFiles = [];
         // Remove the folder name itself from the file list.
         for (var i = 0; i < files.length; ++i) {
-            if (files[i].Key !== downloadName && files[i].Key !== downloadName + 'README.md') {
+            if (files[i].Key !== downloadName && files[i].Key !== downloadName + '/README.md') {
                 prunedFiles.push(files[i]);
             }
         }
