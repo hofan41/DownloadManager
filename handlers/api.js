@@ -154,7 +154,11 @@ exports.runWebhook = function(request, reply) {
 
                 internals.persistWebhooks(webhooks);
 
-                request.server.methods.updateWebhookStatus('queued', request.params.webhookId);
+                request.server.methods.updateWebhookStatus({
+                    status: 'queued',
+                    id: webhook.id,
+                    label: webhook.name
+                });
 
                 return reply.continue();
             });
