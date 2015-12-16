@@ -308,7 +308,7 @@ exports.fileList = function(request, reply) {
         var prunedFiles = [];
         // Remove the folder name itself from the file list.
         for (var i = 0; i < files.length; ++i) {
-            if (files[i].Key !== downloadName && files[i].Key !== downloadName + '/README.md') {
+            if (files[i].Key !== downloadName && files[i].Key !== downloadName + 'README.md') {
                 prunedFiles.push(files[i]);
             }
         }
