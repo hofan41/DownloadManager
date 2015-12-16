@@ -45,7 +45,7 @@ $(function() {
     var socket = io();
 
     $('.webhook-action').each(function() {
-        var updateWebhookStatusEvent = 'updateWebhookStatus.' + this.id;
+        var updateWebhookStatusEvent = 'updateWebhookStatus.' + this.id + '.' + internals.downloadName;
         var that = this;
         socket.on(updateWebhookStatusEvent, updateWebhookStatus);
     });

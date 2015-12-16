@@ -21,7 +21,7 @@ internals.refreshWebhookList = function() {
 };
 
 internals.updateWebhookStatus = function(data) {
-    this.emit('updateWebhookStatus.' + data.id, data);
+    this.emit('updateWebhookStatus.' + data.id + '.' + data.commit, data);
 };
 
 exports.register = function(server, options, next) {

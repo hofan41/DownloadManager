@@ -10,13 +10,18 @@ var internals = {};
 internals.webhookFile = 'webhooks.json';
 
 exports._getWebhooks = internals._getWebhooks = function() {
-    var webhooks = {
-        data: []
-    };
+    var webhooks;
 
-    if (fs.existsSync(internals.webhookFile)) {
-        webhooks = JSON.parse(fs.readFileSync(fs.realpathSync(internals.webhookFile), 'utf8'));
+    try {
+        if (fs.existsSync(internals.webhookFile)) {
+            webhooks = JSON.parse(fs.readFileSync(fs.realpathSync(internals.webhookFile), 'utf8'));
+        }
+    } catch (err) {
+        webhooks = {
+            data: []
+        };
     }
+
 
     return webhooks;
 };
@@ -108,6 +113,7 @@ exports.jenkinsUpdateWebhook = function(request, reply) {
             request.server.methods.updateWebhookStatus({
                 status: request.query.status,
                 id: request.query.webhook,
+                commit: request.query.commit,
                 label: webhook.name
             });
 
@@ -157,6 +163,7 @@ exports.runWebhook = function(request, reply) {
                 request.server.methods.updateWebhookStatus({
                     status: 'queued',
                     id: webhook.id,
+                    commit: request.params.commit,
                     label: webhook.name
                 });
 
