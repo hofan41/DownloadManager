@@ -150,7 +150,8 @@ exports.runWebhook = function(request, reply) {
             // check if this webhook is already running
             if (webhook.commitsRunning &&
                 webhook.commitsRunning[request.params.commit] &&
-                webhook.commitsRunning[request.params.commit].status != 'fail') {
+                webhook.commitsRunning[request.params.commit].status != 'fail' &&
+                webhook.commitsRunning[request.params.commit].status != 'success') {
                 return reply.continue();
             }
 
@@ -288,7 +289,7 @@ exports.commitList = function(request, reply) {
 };
 
 exports.downloadsList = function(request, reply) {
-    // listBucket only returns 1000 items. 
+    // listBucket only returns 1000 items.
     // Need to update this function to retrieve all items > 1000.
     return this.s3.listBucketDirectories().then(function(directories) {
         return reply({
