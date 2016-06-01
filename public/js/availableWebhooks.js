@@ -11,7 +11,7 @@ window.updateWebhookStatus = function(data) {
         case 'success':
             btn.append('<span title="completed successfully!" class="glyphicon glyphicon-ok" style="margin-left: 10px;"></span>');
             btn.addClass('btn-success');
-            btn.addClass('disabled');
+            btn.removeClass('disabled');
             break;
         case 'fail':
             btn.append('<span title="failed to complete successfully!" class="glyphicon glyphicon-warning-sign" style="margin-left: 10px;"></span>');
