@@ -5,14 +5,15 @@ if accessRights.upload
         .btn-group(role='group', aria-label='Actions').panel-group
             a.btn.btn-primary(role='button') Actions
             each webhook in webhooks
-                a.btn.btn-default.webhook-action(role='button', id='#{webhook.id}', href='webhook/#{webhook.id}') #{webhook.name}
-                if webhook.commitsRunning && webhook.commitsRunning[downloadName]
-                    script(type='text/javascript').
-                        $(function(){
-                            window.updateWebhookStatus({
-                                id: '#{webhook.id}',
-                                status: '#{webhook.commitsRunning[downloadName].status}',
-                                label: '#{webhook.name}'
+                if webhook.repository == breadcrumbs[1].name
+                    a.btn.btn-default.webhook-action(role='button', id='#{webhook.id}', href='webhook/#{webhook.id}') #{webhook.name}
+                    if webhook.commitsRunning && webhook.commitsRunning[downloadName]
+                        script(type='text/javascript').
+                            $(function(){
+                                window.updateWebhookStatus({
+                                    id: '#{webhook.id}',
+                                    status: '#{webhook.commitsRunning[downloadName].status}',
+                                    label: '#{webhook.name}'
+                                });
                             });
-                        });
-        
+
